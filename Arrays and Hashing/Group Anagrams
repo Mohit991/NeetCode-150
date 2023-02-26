@@ -1,0 +1,109 @@
+# Explanation: We will create a list sortedStrs that will have all the string in strs but sorted. 
+# alreadyAdded set will contain indexes of all the strings which have been added to ans. 
+# Now take a string from sortedStrs and compare it with all the ahead string in sortedStrs.
+# If they match then it is an anagram. Add corresponding string in strs to currentAnagrams. 
+# When you have seen all the strings add currentAnagrams to ans. 
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        ans = []
+        n = len(strs)
+        sortedStrs = []
+        for string in strs:
+            sortedStrs.append(sorted(string))
+    
+        alreadyAdded = set()
+
+        for i in range(n):
+            if i in alreadyAdded: 
+                    continue
+            current = strs[i]
+            currentSorted = sortedStrs[i]
+            currentAnagrams = [current]
+            for j in range(i+1, n):
+                if currentSorted == sortedStrs[j]:
+                    alreadyAdded.add(j)
+                    currentAnagrams.append(strs[j])
+            ans.append(currentAnagrams)
+        return ans
+            
+#########################################################################################
+
+# Explanation: One interesting fact about anagrams is that when you sort them, they become the same 
+# string. eg eat and ate are anagrams and when you sort both are aet. 
+# Using this fact, we will create a solution. 
+# we will create a dictionary of lists called ans. Now we go through all the strings, sort the string
+# then we will use this sorted string as a key. For all the anagrams the key will be same. 
+# we will add the current string to the key which is same string sorted. 
+# TC - O(n) for the loop and O(m log m) for each string for sort; m = len(string)
+# hence TC: O(n mlogm) and SC: O(nm)
+# we are taking m as avg length of string inside str. 
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        ans = defaultdict(list)
+        for string in strs:
+            sortedString = sorted(string)
+            ans[tuple(sortedString)].append(string)
+            
+        return ans.values()
+            
+# Or we can even optimise this by using an array of 26 instead of a sorting. 
+# We will create an array of 26 and use it as freq. For all the anagrams this freq array will be same.
+# We will then use this freq array as a key to the map. 
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        ans = defaultdict(list)
+        for string in strs:
+            freq = [0] * 26
+            for c in string:
+                freq[ord(c) - ord('a')] += 1
+            ans[tuple(freq)].append(string)
+        
+        return ans.values()
+    
+# By this logic TC: O(nm) bc inner loop runs m times for each string. m = avg len of string.
+# SC: O(nm)
+
+#########################################################################################
+
+# Below solution is just for the sake of completion. 
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        def ifAnagram(s, t):
+            memo = {}
+            for c in s:
+                if c in memo:
+                    memo[c] += 1
+                else:
+                    memo[c] = 1
+
+            for c in t:
+                if c not in memo or memo[c] == 0:
+                    return False
+                memo[c] -= 1
+                
+            for key in memo:
+                if memo[key] > 0:
+                    return False
+                
+            return True
+        
+        ans = []
+        alreadyAdded = set()
+        n = len(strs)
+        for i in range(n):
+            if i not in alreadyAdded:
+                currentAnagrams = [strs[i]]    
+                for j in range(i+1, n):
+                    if ifAnagram(strs[i], strs[j]):
+                        currentAnagrams.append(strs[j]) 
+                        alreadyAdded.add(j)
+                ans.append(currentAnagrams)
+        return ans        
+                
+
+
+
