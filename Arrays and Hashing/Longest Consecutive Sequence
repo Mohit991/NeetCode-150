@@ -1,0 +1,76 @@
+# Explanation: We will take set of nums ie numsSet.
+# We will go through the nums and if for the current num previous num is in numsSet, that means this 
+# is not the beginning of the seq. So, we skip this num.
+# If previous num is not in numsSet that means this is start of the seq, so, we find this seq. 
+# Take the current num and keep increasing 1 and keep checking if it is in numsSet. 
+# Every num in nums in accessed once hence TC: O(n)
+
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        numsSet = set(nums)
+        maxSeq = 0
+        for num in nums:
+            if num - 1 in numsSet:
+                continue
+            seq = 0
+            consecutiveNum = num
+            while True:
+                if consecutiveNum in numsSet:
+                    seq += 1
+                else:
+                    break
+                consecutiveNum += 1
+            
+            maxSeq = max(maxSeq, seq)
+        return maxSeq
+
+#################################################################
+
+# Simply sort the array and then find the seq.
+
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        if not nums: return 0 
+        nums.sort() #Bottleneck
+        consSeq = 1
+        maxConsSeq = 1
+        for i in range(len(nums)-1):
+            if nums[i] == nums[i+1] - 1:
+                consSeq += 1
+                if consSeq > maxConsSeq:
+                    maxConsSeq = consSeq
+            elif nums[i] == nums[i+1]:
+                continue
+            else:
+                consSeq = 1
+        return maxConsSeq
+    
+###################################################################
+
+# Explanation: We will use a numsSet(set of nums) and countOfConsecutive dictionary. 
+# countOfConsecutive will contain the number of consuctive numbers present after the key number.
+# we will go through the nums. For every number we will find the consuctive numbers present after this.
+# we will store that in countOfConsecutive. If we encounter the number again we will simple take
+# consecutive seq from this dict. 
+
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        if not nums: return 0
+        numsSet = set(nums)
+        countOfConsecutive = {}
+        
+        maxSeq = 0
+        for n in nums:
+            seq = 0
+            number = n
+            while number in numsSet:
+                if number in countOfConsecutive:
+                    seq += countOfConsecutive[number]
+                    break
+                seq += 1
+                number += 1
+            countOfConsecutive[n] = seq
+            maxSeq = max(maxSeq, seq)
+
+        return maxSeq
+        
