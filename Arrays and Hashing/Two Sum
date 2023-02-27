@@ -1,0 +1,16 @@
+# Explanation: We will take a map numsMap. Now as we go thourgh the list, for every nummber if 
+# target-num is present in numsMap. Then we got our ans. 
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        numsMap = {}
+        for i in range(len(nums)):
+            secondNum = target-nums[i]
+            if secondNum in numsMap:
+                return [numsMap[secondNum], i]
+            numsMap[nums[i]] = i  
+            
+                    
+        
+        
+        
