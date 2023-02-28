@@ -1,0 +1,55 @@
+# Explanation: Sort both and compare. If match then anagram else not.
+# TC - O(nlogn), lets say avg length of s and t = n
+
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t): return False
+        return sorted(s) == sorted(t)
+        
+
+# Explanation: Use a map to capture freq of all chars in s and then match it with t.
+# TC - O(n), lets say avg length of s and t = n
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t): return False
+        freq = {}
+        for c in s:
+            if c in freq:
+                freq[c] += 1
+            else:
+                freq[c] = 1
+        
+        for c in t:
+            if c in freq and freq[c] >= 0:
+                freq[c] -= 1
+            else:
+                return False
+        
+        for key in freq:
+            if freq[key] > 0:
+                return False
+            
+        return True
+
+Explanation: Use an array of 26 instead of map to capture freq of all chars in s.
+then match it with t.
+TC - O(n), lets say avg length of s and t = n
+
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t): return False
+        freq = [0]*26
+        for c in s:
+            freq[ord(c) - ord('a')] += 1
+        
+        for c in t:
+            if freq[ord(c) - ord('a')] <= 0:
+                return False
+            else:
+                freq[ord(c) - ord('a')] -= 1
+        
+        for val in freq:
+            if val > 0:
+                return False
+            
+        return True
