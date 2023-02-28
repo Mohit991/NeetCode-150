@@ -31,9 +31,9 @@ class Solution:
             
         return True
 
-Explanation: Use an array of 26 instead of map to capture freq of all chars in s.
-then match it with t.
-TC - O(n), lets say avg length of s and t = n
+# Explanation: Use an array of 26 instead of map to capture freq of all chars in s.
+# then match it with t.
+# TC - O(n), lets say avg length of s and t = n
 
 class Solution:
     def isAnagram(self, s: str, t: str) -> bool:
