@@ -1,0 +1,40 @@
+# Explanation: First we create an array leftProduct. For every element in the array, we will put
+# product of all the elements to its left in this leftProduct. 
+# Same with rightProduct, For every element in the array, we will put
+# product of all the elements to its right in this rightProduct. 
+# We will multiply both of these arrays and return that ans. 
+
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        N = len(nums)
+        leftProduct = [1]
+        for i in range(1, N):
+            leftProduct.append(leftProduct[-1]*nums[i-1])
+        
+        rightProduct = [1]
+        for i in range(N-2, -1, -1):
+            rightProduct.append(rightProduct[-1]*nums[i+1])
+        rightProduct.reverse()
+        
+        ans = []
+        for i in range(N):
+            ans.append(rightProduct[i]*leftProduct[i])
+            
+        return ans
+
+# If we want O(n) space then we can make changes to the ans array only to get the answer.
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        N = len(nums)
+        ans = [1]
+        
+        for i in range(1, N):
+            ans.append(ans[-1]*nums[i-1])
+            
+        rightProduct = nums[-1]
+        for i in range(N-2, -1, -1):
+            ans[i]  *= rightProduct
+            rightProduct *= nums[i]
+            
+        return ans
+        
