@@ -1,0 +1,46 @@
+# Explanation: First remove all the non alphanumeric chars. 
+# Then convert the remaining to lowercase. Then compare it with its own reverse.
+# If match then return True, else False
+
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        numerics = '0123456789'
+        s1 = ''
+        for c in s:
+            if ord('a') <= ord(c) <= ord('z') or ord('A') <= ord(c) <= ord('Z') or c in numerics:
+                s1 += c
+        
+        
+        s1 = s1.lower()
+        print(s1)
+        if s1 == s1[::-1]:
+            return True
+        return False
+    
+#########################################################################
+
+# Or we can use two pointers left and right. If both chars at left and at right are alphanumeric
+# Then we comapre them in lowercase. If left value is not alphanumeric then we increment left
+# If right value is not alphanumeric then we increment right. If both are not alphanumeric
+# Then we increment left and decrement right. 
+
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        left = 0
+        right = len(s) - 1
+        
+        while left < right:
+            if s[left].isalnum() and s[right].isalnum():
+                if s[left].lower() != s[right].lower():
+                    return False
+                left += 1
+                right -= 1
+            elif not s[left].isalnum():
+                left += 1
+            elif not s[right].isalnum():
+                right -= 1
+            else:
+                left += 1
+                right -= 1
+            
+        return True
