@@ -1,0 +1,24 @@
+#Solution: Take two pointers. Start one from left and start one from right. Find the height of the 
+# current container as min(height[left], height[right]) and width = right - left.
+# Find area. Now either left or right whichever value is minimum, move that pointer. 
+# Do left + 1 or right - 1, which is lesser of the two. 
+#TC - O(n), SC - O(1)
+
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        N = len(height)
+        left = 0
+        right = N - 1
+        maxWater = -inf
+        
+        while left < right:
+            h = min(height[left], height[right])
+            w = right - left
+            water = h * w
+            maxWater = max(water, maxWater)
+            
+            if height[left] < height[right]:
+                left += 1
+            else:
+                right -= 1
+        return maxWater
