@@ -1,0 +1,16 @@
+# Explanation: We go through the array and keep finding the min value so far. 
+# We take each value and find the profit by currentValue - minValue. 
+# We keep updating the max profit by max(maxProfit, profit)
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        minValue = inf
+        maxProfit = 0
+        
+        for currentValue in prices:
+            if currentValue < minValue:
+                minValue = currentValue
+            profit = currentValue - minValue
+            maxProfit = max(maxProfit, profit)
+            
+        return maxProfit
