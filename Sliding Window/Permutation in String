@@ -1,0 +1,35 @@
+#Explanation: We will create a window of size equal to the length of s1 in s2. We will capture the
+# freq of all elements in s1 and freq of chars in that window in s2. We will compare the two and 
+# if they match then it is a permuation else not. 
+# As we slide the window, we will increase the freq of the newly added char and decrease the freq of
+# removed char. We comapre at each step to check if current window is a permutation or not. 
+
+
+class Solution:
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        if len(s1) > len(s2):
+            return False
+        
+        freqMemo = [0] * 26
+        for char in s1:
+            freqMemo[ord(char) - ord('a')] += 1
+        
+        j = 0
+        for i in range(len(s2)):
+            if i < len(s1) - 1: #window is smaller than the size of s1. This cannot be a permutation.
+                freqMemo[ord(s2[i]) - ord('a')] -= 1
+                continue
+            
+            freqMemo[ord(s2[i]) - ord('a')] -= 1
+            permutation = True
+            for freq in freqMemo:
+                if freq != 0:
+                    permutation = False
+            
+            if permutation: return True
+            
+            freqMemo[ord(s2[j]) - ord('a')] += 1
+            j += 1
+        
+        return False
+            
