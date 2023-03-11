@@ -1,0 +1,24 @@
+#We will use a stack. Store the token in stack if it is not an expression. 
+# If it is an expression, pop top two elements from stack and do the op on these two.
+# Push the result back onto the stack. 
+
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stack = []
+        setOfExp = ('+', '-', '*', '/')
+        for t in tokens:
+            if t in setOfExp:
+                val1 = stack.pop()
+                val2 = stack.pop()
+                if t == '+':
+                    stack.append(val2+val1)
+                elif t == '-':
+                    stack.append(val2-val1)
+                elif t == '*':
+                    stack.append(val2*val1)
+                else:
+                    stack.append(int(val2/val1))
+            else:
+                stack.append(int(t))
+        return stack.pop()
+     
