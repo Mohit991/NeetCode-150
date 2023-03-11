@@ -1,0 +1,40 @@
+#We will create two stacks. stack will have the elements in lifo order(ordinary stack).
+# minVal stack will have minimum value at every point in the stack. 
+
+# When we push we push the elements in the stack. Also, we check if the minVal is empty or 
+# the currrent min value is greater the the new value then we insert the new value as minumn.
+# else we put the last min value in the stack. 
+
+# When we pop, we pop from stack.
+
+# when we do getMin, we return the top value from minVal stack. 
+class MinStack:
+    def __init__(self):
+        self.stack = []
+        self.minVal = []
+        
+    def push(self, val: int) -> None:
+        self.stack.append(val)
+        
+        if not self.minVal or self.minVal[-1] > val:
+            self.minVal.append(val)
+        else:
+            self.minVal.append(self.minVal[-1])
+
+    def pop(self) -> None:
+        self.stack.pop()
+        self.minVal.pop()
+
+    def top(self) -> int:
+        return self.stack[-1]
+
+    def getMin(self) -> int:
+        return self.minVal[-1]
+
+
+# Your MinStack object will be instantiated and called as such:
+# obj = MinStack()
+# obj.push(val)
+# obj.pop()
+# param_3 = obj.top()
+# param_4 = obj.getMin()
