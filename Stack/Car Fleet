@@ -1,0 +1,18 @@
+# Explanation: https://leetcode.com/problems/car-fleet/discuss/255589/Python-Code-with-Explanations-and-Visualization-Beats-95
+
+class Solution:
+    def carFleet(self, target: int, position: List[int], speed: List[int]) -> int:
+        n = len(position)
+        
+        positionAndSpeed = [[position[i], speed[i]] for i in range(n)]
+        positionAndSpeed.sort(reverse = True) #sort by position
+        fleets = []
+        
+        for currentCarPositionAndSpeed in positionAndSpeed:
+            currentCarPosition = currentCarPositionAndSpeed[0]
+            currentCarSpeed = currentCarPositionAndSpeed[1]
+            currentCarArrivalTime = (target - currentCarPosition) / currentCarSpeed
+            if not fleets or fleets[-1] < currentCarArrivalTime:
+                fleets.append(currentCarArrivalTime)
+        
+        return  len(fleets)
