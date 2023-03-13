@@ -1,0 +1,38 @@
+# Use solution to this problem: https://leetcode.com/submissions/detail/913759312/
+# Remember: Whenever we have a problem where we need to find the bigger/smaller
+# element from the current element, we will use this method. 
+# Find rightSmallest containing the smaller element than the current element towards
+# right. 
+# Find leftSmallest containing the smaller element than the current element towards
+# left.
+# Use both of these arrays to find the width for each element, multiply with height and 
+# find area. 
+
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        n = len(heights)
+        rightSmallest = [n-1] * n
+        stack = []
+        
+        for i in range(n):
+            while stack and heights[stack[-1]] > heights[i]:
+                rightSmallest[stack.pop()] = i - 1
+            stack.append(i)
+
+        leftSmallest = [0] * n
+        stack = []
+        
+        for i in range(n-1, -1, -1):
+            while stack and heights[stack[-1]] > heights[i]:
+                leftSmallest[stack.pop()] = i + 1
+            stack.append(i)
+
+        
+        maxArea = -inf
+        for i in range(n):
+            width = rightSmallest[i] - leftSmallest[i] + 1
+            maxArea = max(maxArea, heights[i] * width)
+        
+        return maxArea
+            
+            
