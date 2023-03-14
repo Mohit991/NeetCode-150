@@ -1,0 +1,41 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+#Our target is to modify list1 by adding nodes from list2 in appropriate positions. 
+# First we add a dummy node at the beginning of the list1.
+
+# now we go through the lists and whichever value from the two lists is smaller,
+# we add that to the list1. 
+
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        if not list1 and not list2:
+            return None 
+        if not list1: return list2
+        if not list2: return list1
+        
+        dummy = ListNode()
+        dummy.next = list1
+        list1 = dummy
+        
+        list1Ptr = list1.next
+        list2Ptr = list2
+        mainPointer = list1
+        
+        while list1Ptr and list2Ptr:
+            if list2Ptr.val < list1Ptr.val:
+                mainPointer.next = list2Ptr 
+                list2Ptr = list2Ptr.next
+            else:
+                mainPointer.next = list1Ptr
+                list1Ptr = list1Ptr.next
+            mainPointer = mainPointer.next  
+        
+        if list1Ptr:
+            mainPointer.next = list1Ptr
+        if list2Ptr:
+            mainPointer.next = list2Ptr
+        return dummy.next
