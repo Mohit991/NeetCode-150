@@ -1,0 +1,124 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+# Explanation: If we are allowed to modify the values of the nodes then we can
+# create a list and store all the values of all the nodes in that list. 
+# After that we can go through the linked list and update the nodes of the LL
+# using the list appropirately. 
+
+class Solution:
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        """
+        Do not return anything, modify head in-place instead.
+        """
+        nodeValues = []
+        temp = head
+        while temp != None:
+            nodeValues.append(temp.val)
+            temp = temp.next
+                
+        i = 0
+        j = len(nodeValues) - 1
+        current = head
+        flag = True
+        
+        while i <= j:
+            if flag:
+                current.val = nodeValues[i]
+                flag = False
+                i += 1
+            else:
+                current.val = nodeValues[j]
+                flag = True
+                j -= 1
+            current = current.next
+
+##########################################################################     
+
+# Explanation: We first find the mid using two pointers approch. 
+# Once done we take the second half after the mid and put mid.next = None
+# this is because mid should be the last element after modification.
+# Now we will take a stack and put the second part of the LL onto the stack. 
+# Once we have the stack, keep popping from the stack and put popped
+# the element between two nodes in first part. 
+
+class Solution:
+    def getMid(self, head):
+        slow, fast = head, head
+        while fast.next and fast.next.next:
+            fast = fast.next.next
+            slow = slow.next
+        return slow
+    
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        mid = self.getMid(head)
+        secondPart = mid.next
+        mid.next = None
+        
+        stack = []
+        while secondPart:
+            stack.append(secondPart)
+            secondPart = secondPart.next
+        
+        current = head
+        ahead = head
+        while stack and current:
+            ahead = current.next
+            current.next = stack.pop()
+            current.next.next = ahead
+            current = ahead
+            
+##################################################################
+
+# Explanation:  We first find the mid using two pointers approch. 
+# Once done we take the second half after the mid and put mid.next = None
+# this is because mid should be the last element after modification.
+# Take the second part and reverse it. Then put the elements from the second
+# list appropriately in the first list. 
+
+# https://leetcode.com/problems/reorder-list/discuss/801883/Python-3-steps-to-success-explained
+
+class Solution:
+    def getMid(self, head):
+        slow, fast = head, head
+        while fast.next and fast.next.next:
+            fast = fast.next.next
+            slow = slow.next
+        return slow
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        mid = self.getMid(head)
+        prev = None
+        current = mid.next
+        mid.next = None
+        
+        while current:
+            ahead = current.next
+            current.next = prev
+            prev = current
+            current = ahead
+        
+        
+        head1 = head
+        head2 = prev
+
+        while head1 and head2:
+            t1 = head1.next
+            t2 = head2.next
+            head1.next = head2
+            head2.next = t1
+            head1 = t1
+            head2 = t2
+        
+        
+        
+
+        
+        
+            
+        
+            
+            
+        
