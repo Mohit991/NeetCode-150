@@ -1,0 +1,68 @@
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
+        self.val = int(x)
+        self.next = next
+        self.random = random
+"""
+# We can create a list to map nodes to their index in the original LL. 
+# Then create another map which points the index to their random indexes. 
+# Then create a new lists with the values from the original LL.
+# Create another dict mapping index to nodes. 
+# Finally we will update all the random pointers in the new list, using the map
+# which maps which points the index to their random indexes.
+
+
+class Solution:
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+        if not head:
+            return None
+        
+        nodeIndices = {None: None}
+        temp = head
+        index = 0
+        while temp:
+            nodeIndices[temp] = index
+            temp = temp.next
+            index += 1
+        # print(nodeIndices)
+        
+        
+        RandomIndicesMapping = {}
+        temp = head
+        index = 0 
+        while temp:
+            RandomIndicesMapping[index] = nodeIndices[temp.random]
+            index += 1
+            temp = temp.next
+        # print(RandomIndicesMapping)
+        
+        dummy = Node(0)
+        newList = dummy
+        temp = head
+        index = 0
+        while temp:
+            newNode = Node(temp.val)
+            newNode.next = temp.next
+            dummy.next = newNode
+            dummy = dummy.next
+            temp = temp.next
+        
+        nodeIndicesOfNew = {None: None}
+        temp = newList.next #First node of new list is a dummy node. 
+        index = 0
+        while temp:
+            nodeIndicesOfNew[index] = temp
+            temp = temp.next
+            index += 1
+            
+        temp = newList.next
+        index = 0
+        while temp:    
+            temp.random = nodeIndicesOfNew[RandomIndicesMapping[index]]
+            temp = temp.next
+            index += 1
+            
+        return newList.next
+    
