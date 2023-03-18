@@ -1,0 +1,95 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+# In this solution, we will go through all the LLs, take the first element of each list
+# and find the min of those. When I find the min element, I also save its index. 
+# I add this min node to the ans LL and move the pointer at that index where I found this
+# min. I will do this until all the LLs are not none.
+# TC: O(nk), n = avg no of elements in the linked list, k = no of LLs
+
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        temp = ListNode()
+        newList = temp
+        k = len(lists)
+        while 1:
+            mininum = inf
+            selected = 0
+            for i in range(k):
+                if lists[i]:
+                    if mininum > lists[i].val:
+                        mininum = lists[i].val
+                        selected = i
+            if mininum == inf:
+                break
+            newNode = ListNode(mininum)
+            temp.next = newNode
+            temp = temp.next
+            lists[selected] = lists[selected].next
+        return newList.next
+                
+##########################################################################
+
+# Merge Sort:
+# This is divide and conqure approch. I have created a function to merge two sorted lists. 
+# The plan is to merge first and last list. Second and second last list and so on. 
+# Once that is done first list will have merged of first and last list.
+# Second list will have the merged of second and second last list. 
+# Then again I will merge first and last list but this time last means the middle list
+# because the middle list will have the merged of middle list and last list. 
+# Then I merge second list and second last list from middle. 
+# once this part is done I will again find new mid which is old mid / 2 and do the 
+# same again.
+# In this way I will merge log k times and each time I merge total n nodes.
+# So TC = O(n log k)
+class Solution:
+    def mergeTwoLists(self, list1, list2):
+            dummy = temp = ListNode()
+            
+            while list1 and list2:
+                if list1.val < list2.val:
+                    temp.next = list1
+                    list1 = list1.next
+                else:
+                    temp.next = list2
+                    list2 = list2.next
+                temp = temp.next
+            
+            if list1:
+                temp.next = list1
+            if list2:
+                temp.next = list2
+            return dummy.next
+        
+    def merge(self, lists, left, right):
+        if left == right:
+            return lists[left]
+        
+        mid = left + (right - left) // 2
+        l1 = self.merge(lists, left, mid)
+        l2 = self.merge(lists, mid+1, right)
+        return self.mergeTwoLists(l1, l2)
+        
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        if not lists:
+            return None
+        if len(lists) == 1:
+            return lists[0]
+        head = self.merge(lists, 0, len(lists) - 1)
+        
+        return head #first list ie lists[0]
+        
+# For those who curious about why Divide-Conquer method has TC : O(Nlog(N))
+
+# Splitting list into two, log(N) times = O(log(N))
+# Merging split lists into one in ascending order, need to traverse every element = O(N)
+# In Summary, we merging it log(N) times and in each merging we should traverse N element.
+# Therefore the Time Complexity is O(Nlog(N)) where n is the number of element.
+
+# In this case, the element is a linked list, so I think Time Complexity is O(Mlog(N))
+# N : number of linked lists
+# M : number of element of merged linked list                
+            
