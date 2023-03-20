@@ -40,7 +40,7 @@ class LRUCache:
 # Change position of the node means two operations, delete and insert.
 # Double linked list data structure takes constant time O(1) to insert or delete nodes a linked list by repointing the previous and next pointer of the node.
 # Array data structure takes O(n) to insert or delete an element in the list by shifting all the element behind the position (backward for insertion, forward for deletion) by one.
-
+ 
 # put :
 # if the key is already in the cache, we update the value, remove the key node and insert the key node after the head;
 # if the key is not in cache, if the cache is not full,we insert the new key node after the head. If the cache is full, we delete the node before the tail to make room for the new key node, and insert the new key node after the head.
