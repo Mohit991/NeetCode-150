@@ -1,0 +1,40 @@
+# There are two ways to do this. 
+# 1. Create a min heap. Put all the distances in this min heap. 
+# Pop k from this and return those points. 
+# O(n logn) + O(k logn)
+
+
+
+class Solution:
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        heap = []
+        for point in points:
+            x = point[0]
+            y = point[1]
+            distance = x*x + y*y
+            heappush(heap, (distance, [x,y]))
+        
+        kClosestPoints = []
+        for i in range(k):
+            kClosestPoints.append(heappop(heap)[1])
+        
+        return kClosestPoints
+
+
+# 2. Maintain a min heap of len(points) - k. When min heap has more than these many 
+# elements, pop that and add to answer. 
+# O(k log(len(points) - k))
+
+class Solution:
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        heap = []
+        kClosestPoints = []
+        for point in points:
+            x = point[0]
+            y = point[1]
+            distance = x*x + y*y
+            heappush(heap, (distance, [x,y]))
+            if len(heap) > len(points) - k:
+                kClosestPoints.append(heappop(heap)[1])
+        
+        return kClosestPoints
