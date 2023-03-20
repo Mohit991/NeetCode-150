@@ -1,0 +1,26 @@
+# We will use max heap. Take all the elements from stones and put them in heap array.
+# Make the elements negative for max heap operations.
+# Heapify the heap.
+# Pop two biggest elements from the heap, if they are equal, we move on.
+# Otherwise find the difference, and push that differnce onto the heap. 
+# If there is something in the heap return that or return 0. 
+
+class Solution:
+    def lastStoneWeight(self, stones: List[int]) -> int:
+        heap = [-n for n in stones]
+        heapify(heap)
+        
+        while len(heap) > 1:
+            top1 = heappop(heap)
+            top2 = heappop(heap)
+            
+            if top1 == top2:
+                continue
+            
+            diff = top1 - top2
+            heappush(heap, diff)
+            
+        if heap:
+            return -heap[0]
+        else:
+            return 0
