@@ -1,0 +1,52 @@
+# Just sort the array and return element at index len(nums) - k
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        nums.sort()
+        return nums[len(nums) - k]
+    
+
+# Use heap. Maintain a min heap of length k.   
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        heap = []
+        for n in nums:
+            heappush(heap, n)
+            if len(heap) > k:
+                heappop(heap)
+        return heap[0]
+
+# Use quick sort. Using this sort only sort that part of the array which has index of k.
+
+class Solution:
+    def swap(self, nums, i, j):
+        temp = nums[i]
+        nums[i] = nums[j]
+        nums[j] = temp
+        return
+    
+    def partition(self, nums, low, high): #This is the partition logic for quick sort. 
+        pivot = nums[high]
+        left = low
+        for j in range(low, high):
+            if nums[j] <= pivot:
+                self.swap(nums, left, j)
+                left += 1
+        self.swap(nums, left, high)
+        return left
+
+    def findKthLargest(self, nums: List[int], k: int) -> int: 
+        indexOfK = len(nums) - k
+        low = 0
+        high = len(nums) - 1
+        
+        while low < high:
+            indexOfPivot = self.partition(nums, low, high)
+            #we will only apply quick sort to the part which has the index of k. 
+            if indexOfPivot < indexOfK:
+                low = indexOfPivot + 1
+            elif indexOfPivot > indexOfK:
+                high = indexOfPivot - 1
+            else:
+                break
+        return nums[indexOfK]
+    
