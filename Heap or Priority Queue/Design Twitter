@@ -1,0 +1,66 @@
+# Explanation: https://www.youtube.com/watch?v=pNichitDD2E
+# First we can take care of follow and unfollow functions. 
+# For following and unfollowing we need to add and remove followee id from the follwers list 
+# of the user. So, we will create a defaultdict of set. So, each user will have followers
+# list as sets, so that we can add and remove followee in O(1) time. 
+# After this we will create a timestamp variable which will help us to get the latest tweets
+# We will create a tweetMap defaultdict which will have userid as key and a list of
+# timestamp and tweetIds for that user. 
+# When a user posts a tweet, we add at the end of userid's list in tweetMap. We also
+# decrement timestamp, bc we will be using minHeap and least timestamp means latest tweet.
+
+# Now for getNewsFeed, we will create a min heap. We will go through the list of all the 
+# followers of the userid using followersMap, we will put all the latest tweets from
+# from all the followees of the user into the map(latest tweet will be the last index)
+# Once we have all the latest tweets from all the followees, We will take the latest tweet 
+# from all the followees and then insert the next latest tweet(index - 1) for that 
+# perticular followee into the heap. We will continue this until we have 10 tweets in the
+# feed. Once we have that, we stop the loop and return that feed.
+
+
+class Twitter:
+    def __init__(self):
+        self.timestamp = 0
+        self.tweetMap = defaultdict(list)
+        self.followersMap = defaultdict(set)
+
+    def postTweet(self, userId: int, tweetId: int) -> None:
+        self.tweetMap[userId].append([self.timestamp, tweetId])
+        self.timestamp -= 1
+        
+    def getNewsFeed(self, userId: int) -> List[int]:
+        minHeap = []
+        newsFeed = []
+        
+        self.followersMap[userId].add(userId)
+        for followeeId in self.followersMap[userId]:
+            if self.tweetMap[followeeId]:
+                index = len(self.tweetMap[followeeId]) - 1
+                timestamp, tweetId = self.tweetMap[followeeId][index]
+                heappush(minHeap, [timestamp, tweetId, index - 1, followeeId])
+        
+        while len(newsFeed) < 10 and minHeap:
+            timestamp, tweetId, index, followeeId = heappop(minHeap)
+            newsFeed.append(tweetId)
+            if index >= 0:
+                timestamp, tweetId = self.tweetMap[followeeId][index]
+                heappush(minHeap, [timestamp, tweetId, index - 1, followeeId])
+        return newsFeed
+    
+    def follow(self, followerId: int, followeeId: int) -> None:
+        self.followersMap[followerId].add(followeeId)
+
+    def unfollow(self, followerId: int, followeeId: int) -> None:
+        self.followersMap[followerId].discard(followeeId)
+        # The discard() method removes the specified item from the set.
+        # This method is different from the remove() method, because the remove() method 
+        # will raise an error if the specified item does not exist, and the discard() 
+        # method will not.
+
+
+# Your Twitter object will be instantiated and called as such:
+# obj = Twitter()
+# obj.postTweet(userId,tweetId)
+# param_2 = obj.getNewsFeed(userId)
+# obj.follow(followerId,followeeId)
+# obj.unfollow(followerId,followeeId)
