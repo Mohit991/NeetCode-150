@@ -1,0 +1,93 @@
+# Explanation: We will take two heaps smallerHeap and biggerHeap. If there are n numbers 
+# in the stream then we will maintain n/2, n/2 number in each heap. In some cases
+# biggerHeap might have n/2 + 1 numbers which is also fine. 
+
+# The first number we will add to smallerHeap. 
+# For the next numbers we will take the smallerHeapMaxVal and if that value is bigger 
+# than the num then we add new num in smaller heap else we add it in bigger heap. 
+
+# After addition we our heaps are imbalanced then we will balance it. 
+# If smallerheap has more element take the max element from here and add to bigger heap.
+# If biggerheap has more then take min value from here and add to smaller heap. 
+
+
+# When we return the median, if lenghts of both heaps is equal then length is even,
+# then we will take min from biggerheap and max from smaller heap, find their avg and
+# return that.
+
+# if one heap has more elements from the other heap, we will return max or min from
+# bigger or smaller heap depending upon which is larger. 
+
+class MedianFinder:
+
+    def __init__(self):
+        self.smallerHeap = []
+        self.biggerHeap = []
+
+    def addNum(self, num: int) -> None:
+        if not self.smallerHeap:
+            heappush(self.smallerHeap, -num)
+            return
+        
+        smallerHeapMaxVal = -self.smallerHeap[0]
+        if num < smallerHeapMaxVal:
+            heappush(self.smallerHeap, -num)
+        else:
+            heappush(self.biggerHeap, num)
+        
+        if abs(len(self.biggerHeap) - len(self.smallerHeap)) > 1:
+            if len(self.biggerHeap) > len(self.smallerHeap):
+                biggerHeapMinVal = heappop(self.biggerHeap)
+                heappush(self.smallerHeap, -biggerHeapMinVal)
+            else:
+                smallerHeapMaxVal = -heappop(self.smallerHeap)
+                heappush(self.biggerHeap, smallerHeapMaxVal)
+
+    def findMedian(self) -> float:
+        if len(self.biggerHeap) == len(self.smallerHeap):
+            biggerHeapMinVal = self.biggerHeap[0]
+            smallerHeapMaxVal = -self.smallerHeap[0]
+            return (biggerHeapMinVal + smallerHeapMaxVal) / 2
+        else:
+            if len(self.biggerHeap) > len(self.smallerHeap):
+                return self.biggerHeap[0]
+            else:
+                return -self.smallerHeap[0]
+            
+######################################################################################            
+class MedianFinder:
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        # two heaps, large, small, minheap, maxheap
+        # heaps should be equal size
+        self.small, self.large = [], []  # maxHeap, minHeap (python default)
+
+    def addNum(self, num: int) -> None:
+        if self.large and num > self.large[0]:
+            heapq.heappush(self.large, num)
+        else:
+            heapq.heappush(self.small, -1 * num)
+
+        if len(self.small) > len(self.large) + 1:
+            val = -1 * heapq.heappop(self.small)
+            heapq.heappush(self.large, val)
+        if len(self.large) > len(self.small) + 1:
+            val = heapq.heappop(self.large)
+            heapq.heappush(self.small, -1 * val)
+
+    def findMedian(self) -> float:
+        if len(self.small) > len(self.large):
+            return -1 * self.small[0]
+        elif len(self.large) > len(self.small):
+            return self.large[0]
+        return (-1 * self.small[0] + self.large[0]) / 2
+            
+        
+
+
+# Your MedianFinder object will be instantiated and called as such:
+# obj = MedianFinder()
+# obj.addNum(num)
+# param_2 = obj.findMedian()
