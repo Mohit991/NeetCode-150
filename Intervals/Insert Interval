@@ -1,0 +1,31 @@
+    
+# We can do this question in two steps. 
+# First step is to run a loop and find the correct place for our interval.
+# Second step is to merge the intervals. 
+
+# We have already done the problem of merge intervals, we can just use this solution and merge the intervals. 
+# There is not need to sort the intervals as well. They are already sorted. 
+
+class Solution:
+    def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+        if not intervals:
+            return [newInterval]
+        temp = []
+        intervalAdded = False
+        for i in range(len(intervals)):
+            if newInterval[0] <= intervals[i][0]:
+                temp.append(newInterval)
+                intervalAdded = True
+            temp.append(intervals[i])
+        
+        if not intervalAdded:
+            temp.append(newInterval)
+            
+        res = [temp[0]]
+        for i in range(1, len(temp)):
+            if temp[i][0] <= res[-1][1]:
+                res[-1][1] = max(res[-1][1], temp[i][1])
+            else:
+                res.append(temp[i])
+                
+        return res
