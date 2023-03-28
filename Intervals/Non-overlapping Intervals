@@ -1,0 +1,23 @@
+#We want to remove intervals and make the list non overlapping. We first sort the array, once we have done that
+#then we will go through the array and we will pick every interval, and compare it with interval, which is 
+#represented by j. Now if the intervals are merging that we will want to remove one of them so they dont merge 
+#anymore. We can remove either one but we will remove the one which has the lesser end. This way we will be 
+#minimizing the number of intervals we need to remove. If intervals dont merge we move on. 
+#TC - O(NlongN)
+
+class Solution:
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
+        intervals.sort()
+        count = 0
+        i = 0
+        for j in range(1, len(intervals)):
+            print(intervals[i])
+            if intervals[j][0] < intervals[i][1]:
+                count += 1
+                if intervals[j][1] < intervals[i][1]:
+                    i = j
+            else:
+                i = j
+        return count
+
+
