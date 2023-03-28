@@ -29,3 +29,50 @@ class Solution:
                 res.append(temp[i])
                 
         return res
+    
+#################################################################################
+
+# ___: current interval(i); _ _ _: newInterval
+
+# 1) i.end < newInterval.start，then we can safely add i to result;
+# 	newInterval still needs to be compared with latter intervals
+
+# 	|________|
+# 			       |_ _ _ _ _|
+			
+# 2) i.start > newInterval.end，then we can safely add both to result，
+# 	and mark newInterval as null
+	
+# 			       |________|
+# 	|_ _ _ _ _|
+			
+# 3) There is overlap between i and newInterval. We can merge i into newInterval, 
+# then use the updated newInterval to compare with latter intervals.
+
+	
+# 	|________|
+# 		|_ _ _ _ _|
+			
+# 		|________|
+# 	|_ _ _ _ _|
+    
+    
+class Solution:
+    def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+        res = []
+        newIntervalAdded = False
+        
+        for currentInterval in intervals:
+            if newIntervalAdded or currentInterval[1] < newInterval[0]:
+                res.append(currentInterval)
+            elif currentInterval[0] > newInterval[1]:
+                res.append(newInterval)
+                res.append(currentInterval)
+                newIntervalAdded = True
+            else:
+                newInterval[0] = min(newInterval[0], currentInterval[0])
+                newInterval[1] = max(newInterval[1], currentInterval[1])
+                
+        if not newIntervalAdded:
+            res.append(newInterval)
+        return res
