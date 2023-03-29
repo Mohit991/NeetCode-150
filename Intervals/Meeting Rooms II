@@ -1,0 +1,65 @@
+Description: Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei), 
+find the minimum number of conference rooms required.)
+
+Link: https://www.lintcode.com/problem/919/description
+
+Explanation: We simply need to know at any point in time how many meeting are colliding. That is the max number of rooms we need bc each of these meets 
+will need a new room since they are colliding. 
+
+We will take a 2d array(n rows and 2 columns) and we will put all timings in this array both start and end for each meeting. Also for each time(start or end)
+we will put 0 if it is a start time and 1 if it is an end time. 
+
+We will sort this array based on the timings ie first column
+
+Now we go through the array and if the meeting is starting ie startEndTimings[1] == 0 then we increment no of rooms by 1 else we decrement by 1.
+There is one catch though, since if a meeting ends and a new meeting starts at the same time, we do not need 2 rooms for them just one room.
+For this case we will have to apply a special condition to check it. 
+
+
+from typing import (
+    List,
+)
+from lintcode import (
+    Interval,
+)
+
+"""
+Definition of Interval:
+class Interval(object):
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+"""
+
+class Solution:
+    """
+    @param intervals: an array of meeting time intervals
+    @return: the minimum number of conference rooms required
+    """
+    def min_meeting_rooms(self, intervals: List[Interval]) -> int:
+        # Write your code here
+        startEndTimings = []
+        for interval in intervals:
+            # 0 means start time and 1 means end time
+            startEndTimings.append([interval.start, 0])
+            startEndTimings.append([interval.end, 1])
+
+        startEndTimings.sort() #we will sort using first value which is start 
+        # or end time.
+
+        conferenceRoomsNeeded = 1
+        # we will start from 2nd interval. We will need 1 room for intervals[0]
+        maxConferenceRoomsNeeded = 1
+
+        for index in range(1, len(startEndTimings)):
+            if startEndTimings[index][1]== 0: #This is meeting start time.
+                # If next meeting starts at the same time as the current meeting ends
+                # then we dont need extra room for the next meeting. Hence we continue.
+                if startEndTimings[index+1][0] == startEndTimings[index][0] and startEndTimings[index+1][1] == 1:
+                    continue
+                conferenceRoomsNeeded += 1
+                maxConferenceRoomsNeeded = max(maxConferenceRoomsNeeded, conferenceRoomsNeeded)
+            else:
+                conferenceRoomsNeeded -= 1
+                
+        return maxConferenceRoomsNeeded
