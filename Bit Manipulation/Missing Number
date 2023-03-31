@@ -1,0 +1,58 @@
+# Use the XOR operation. Apply xor operation on all the numbers from 0 to n.
+# Now use the res and apply xor on all nums in nums. 
+# Now the res will have the missing number. 
+# Reason: n xor n is always 0.
+# nums = [2,3,1,4,0] here 5 is missing. 
+# res = 0 ^ 1 ^ 2 ^ 3 ^ 4 ^ 5 (from 0 to n+1)
+# Now xor the array and we get
+# 0 ^ 1 ^ 2 ^ 3 ^ 4 ^ 5 ^ 2 ^ 3 ^ 1 ^ 4 ^ 0
+# All of them cancel each otherand res at the end is 5.
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        n = len(nums)
+        res = 0
+        for i in range(n+1):
+            res = res ^ i
+            
+        for n in nums:
+            res = res ^ n
+            
+        return res
+    
+#########################################################
+# We can find totalSum of all nums from 0 to n using the formula.
+# Now find the array sum and subtract the two and return the res. 
+
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        n = len(nums)
+        totalSum = int(n * ((n+1)/2))
+            
+        arraySum = 0
+        for number in nums:
+            arraySum += number
+            
+        return totalSum - arraySum   
+    
+#########################################################
+
+# If the array is already sorted then we can do this in O(log n) time bc we can use
+# binary search to find the ans. 
+
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        nums.sort()
+        
+        left = 0
+        right = len(nums) - 1
+        
+        while left <= right:
+            mid = int(left + (right - left) / 2)
+            if nums[mid] == mid:
+                left = mid + 1
+            else:
+                right = mid - 1
+        
+        return left
+        
+        
