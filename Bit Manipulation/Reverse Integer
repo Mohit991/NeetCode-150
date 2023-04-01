@@ -1,0 +1,54 @@
+class Solution:
+    def reverse(self, x: int) -> int:
+        isNegative = False
+        if x < 0:
+            isNegative = True
+            x *= -1
+            
+        ans = 0
+        while x > 0:
+            rem = x % 10
+            temp = ans * 10 + rem
+            if temp > pow(2,31):
+                return 0
+            # if int(temp / 10) != ans:
+            #     return 0
+            ans = temp
+            x = int(x / 10)
+        
+        if isNegative:
+            return -ans
+        else:
+            return ans
+
+# class Solution:
+#     def reverse(self, x: int) -> int:
+#         isNegative = False
+#         if x < 0:
+#             isNegative = True
+#             x *= -1
+            
+#         noOfDigits = 0
+#         temp = x
+#         while temp > 0:
+#             temp = int(temp / 10)
+#             noOfDigits += 1
+        
+#         noOfDigits -= 1
+#         # print(digits)
+        
+#         res = 0 
+#         while x > 0:
+#             rem = x % 10
+#             x = int(x / 10)
+#             res += rem * pow(10,noOfDigits)
+#             noOfDigits -= 1
+        
+#         if res > pow(2,31):
+#             return 0
+        
+#         if isNegative:
+#             return -res
+#         else:
+#             return res
+        
