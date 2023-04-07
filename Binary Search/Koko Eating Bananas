@@ -1,0 +1,45 @@
+# Explanation: First we can find the total number of hours to eat all the bananas
+# if there was just a single pile. For that we totalBananas and divide that by h.
+# Since there is not just a single pile, we will use this minEatingSpeedToEatAll
+# to find the speed at which we can finish all bananas hours less than h. 
+# Finally the answer lies between minEatingSpeed/2 and minEatingSpeed. 
+# This is bc minEatingSpeed may not be minimun and we may find some lesser value.
+# Also the answer will be greater than minEatingSpeed / 2 bc in the upper loop
+# minEatingSpeed/2 did not satisfy totalHours < h condition. 
+
+# Now we will use binary search to find the min speed that satisfies totalHours <= h
+# we will return that value. 
+
+class Solution:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+        totalBananas = sum(piles)
+        minEatingSpeedToEatAll = ceil(totalBananas / h)
+        # print(minEatingSpeedToEatAll)
+        totalHours = inf
+        
+        speed = minEatingSpeedToEatAll
+        while totalHours > h:
+            speed *= 2
+            totalHours = 0
+            for pile in piles:
+                totalHours += ceil(pile/speed)
+            
+        minEatingSpeed = speed
+        
+        #This is the template that we have been using for all BS problems. 
+        left = minEatingSpeed / 2
+        right = minEatingSpeed + 1
+        while left < right:
+            mid = left + (right - left) // 2
+            totalHours = 0
+            for pile in piles:
+                totalHours += ceil(pile/mid)
+
+            if totalHours <= h:
+                right = mid 
+            else:
+                left = mid + 1
+            
+        return int(left)
+            
+            
