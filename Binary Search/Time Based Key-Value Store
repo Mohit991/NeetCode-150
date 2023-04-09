@@ -1,0 +1,48 @@
+We will use two maps:
+
+keyTimestampMap: This map will have (key, timestamp) as key and value as value.
+timestampMap: This map will have key as key and a list of timestamps when we encountered that key as values. These values will be sorted.
+set(): We will add (key, timestamp) as key and value as value in keyTimestampMap.
+We will also add the timestamp in timestampMap[key] list.
+
+get(): We will search (key, timestamp) in keyTimestampMap, if it is there then we
+return the value.
+
+If it is not there then in that case we will use timestampMap.
+We will use binary search to find the timestamp which is the greatest smaller timestamp than the given timestamp.
+Once found we will use that timestamp along with the key and return the value from
+keyTimestampMap.
+
+class TimeMap:
+
+    def __init__(self):
+        self.keyTimestampMap = {}
+        self.timestampMap = defaultdict(list)
+
+    def set(self, key: str, value: str, timestamp: int) -> None:
+        self.keyTimestampMap[(key, timestamp)] = value
+        self.timestampMap[key].append(timestamp)
+
+    def get(self, key: str, timestamp: int) -> str:
+        if (key, timestamp) in self.keyTimestampMap:
+            return self.keyTimestampMap[(key, timestamp)]
+        
+        #If there is no values in timestampMap[key] or given timestamp is smaller than
+        #first value of timestampMap[key] then required timestamp wont exist. 
+        #hence return "".
+        if not self.timestampMap[key] or timestamp < self.timestampMap[key][0]:
+            return ""
+        
+        left, right = 0, len(self.timestampMap[key])
+        timestamps = self.timestampMap[key]
+        while left < right:
+            mid = left + (right - left) // 2
+            
+            if timestamp > timestamps[mid]:
+                left = mid + 1
+            else:
+                right = mid
+        
+        # if left == 0: 
+        #     return ""
+        return self.keyTimestampMap[(key, timestamps[left-1])]
