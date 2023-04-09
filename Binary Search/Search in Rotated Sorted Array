@@ -1,0 +1,37 @@
+# First step is to find the minimum in the rotated array.
+# Once we know the min then we can how much the array is rotated. 
+# With the rotation, we knwo that the array is sorted if we consider min element as first. 
+# Rotation will be equal to the index of the min element. 
+# Now we will apply binray search between 0 and n but when we find the mid, we will
+# have to map this mid to realMid(since the array is rotated) but we know the rotation. 
+# we find real mid as realMid = (mid + rotation) % n
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        left = 0
+        right = len(nums) - 1
+        
+        while left < right:
+            mid = left + (right - left) // 2
+            
+            if nums[mid] > nums[right]:
+                left = mid + 1
+            else:
+                right = mid
+        
+        n = len(nums)
+        rotation = left
+        left = 0
+        right = n
+        
+        while left < right:
+            mid = left + (right - left) // 2
+            realMid = (mid + rotation) % n
+            if nums[realMid] == target:
+                return realMid 
+            
+            if nums[realMid] < target:
+                left = mid + 1
+            else:
+                right = mid
+        return -1
