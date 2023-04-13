@@ -1,0 +1,83 @@
+# We need to know the minimum number of jumps we have to do to reach the end index. We will use below items:
+# 1. minJumps: It is an array of n elements. This array tells us the minimum number of jumps we need to do to get to ith index in nums. It has 0 at index 0 since we are at index 0 at the beginning. 
+# ```minJumps = [0] + [inf] * (n-1)```
+# For rest, it has inf since we need to find minimum.
+
+# 2. maxReach: This variable tells us the max index we can reach at the moment. 
+# It is initialised to 0 since we can reach 0 at the beginning. 
+# ```maxReach = 0```
+
+# We go through the array. Each index which is reachable from the current index and if
+# that index is beyond maxReach, we will update the minJumps array for it. 
+# ```minJumps[j] = min(minJumps[j], minJumps[i] + 1)```
+
+# we will also update maxReach as we update minJumps. 
+
+# If at any point we can reach the end index then we know that it is minimum, So, we return that value.
+# ``if minJumps[-1] != inf:
+# return minJumps[-1]``
+				
+# Code:
+# ```
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        n = len(nums)
+        minJumps = [0] + [inf] * (n-1) 
+        maxReach = 0
+        # print(minJumps)
+        for i in range(n):
+            for j in range(maxReach, nums[i] + i + 1):
+                if j >= n:
+                    break
+                minJumps[j] = min(minJumps[j], minJumps[i] + 1)
+                maxReach = j
+            # print(minJumps)
+            if minJumps[-1] != inf:
+                return minJumps[-1]
+# ```
+
+# If you look closely at the code and try to understand the logic, you will notice that we don't really need an extra array for that. 
+
+# See the improved code without the use of the array:
+
+# ```
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        n = len(nums)
+        maxReach = 0
+        i = 0
+        steps = 0
+        while maxReach < n-1:
+            prev = i
+            for i in range(prev, maxReach+1):
+                maxReach = max(maxReach, nums[i] + i)
+            steps += 1
+        return steps    
+# ```
+
+# steps represents the number of steps we have taken so far. 
+# In this code, we find the max index we can reach from the current index. 
+# In the beginning we can reach 0. 
+# As long as maxReach is less than n - 1 we do this. 
+# prev represents the max index we reached from the previous step. 
+# eg [2,3,1,1,4]
+# maxReach = 0
+# prev = 0
+# We take the first index and update maxReach = max(0, 2) = 2
+# Now, prev = 0 
+# So run i from 0 to 3
+# we update for index 0, maxReach = max(0, 2) = 2
+# we update for index 1, maxReach = max(2, 4) = 4
+# we update for index 2, maxReach = max(4, 3) = 4
+
+# we increment steps after each for loop because for loop tells us the  max reach
+# after the previous steps. 
+
+# At the end we return steps.
+
+# ```
+# This is a greedy solution because here we find the max we can reach at each step. 
+# We find the max we can do with step 1, step 2 and so on until we reach 
+# the end index. 
+# ```
+				
