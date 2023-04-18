@@ -1,0 +1,52 @@
+#First step is to know if our hand is even divisible by groupSize. If we cant divide our 
+# hand into groupSize then we return false. 
+
+# Now we will find freq of each element and store it in freq.
+# We will create a minHeap from the keys of the minHeap, so that we can get the minimun
+# value for each hand in O(1)
+
+# Now lets run the loop and take the min value from minHeap. At first this is the min 
+# value in the hand. So, here we get the min value of our hand. So we need to have 
+# consuctive values from this min value till firstVal + groupSize. We will try to find 
+# these elements in the freq. If element is not there then it means that we can make a 
+# consuctive hand and we return false.
+# If element is in freq but its freq is 0, this means that we cant make the hand again
+# so we return false. 
+
+# else we will decrement the freq of this element. If the freq now becomes 0 and this is 
+# first card of the hand, then we will have pop from the min heap, so that we can now have
+# have a different min value. 
+
+# TC: O(n log n)
+# Making freq: O(n)
+# Making heap: O(n)
+# In worst case we will have to pop all the elements from the heap: O(n log n)
+# eg when k = 1
+
+class Solution:
+    def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:
+        if len(hand) % groupSize != 0:
+            return False
+        
+        freq = Counter(hand)
+        #We first take the keys as list and put it in minHeap. 
+        #After that we will heapify it. It takes O(n) 
+        minHeap = list(freq.keys())
+        heapify(minHeap)
+        
+        while minHeap:
+            firstVal = minHeap[0]
+            for i in range(firstVal, firstVal+groupSize):
+                if i not in freq:
+                    return False
+                
+                if freq[i] == 0 and i != firstVal:
+                    return False
+                
+                freq[i] -= 1
+                if freq[i] == 0:
+                    heappop(minHeap)      
+                    
+        return True
+                
+                
