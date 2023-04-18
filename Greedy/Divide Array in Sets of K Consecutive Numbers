@@ -1,0 +1,56 @@
+#First step is to know if our list is even divisible by k. If we cant divide our 
+# list into k then we return false. 
+
+# Now we will find freq of each element and store it in freq.
+# We will create a minHeap from the keys of the minHeap, so that we can get the minimun
+# value for each list in O(1)
+
+# Now lets run the loop and take the min value from minHeap. At first this is the min 
+# value in the list. So, here we get the min valueF of our list. So we need to have 
+# consuctive values from this min value till firstVal + k. We will try to find 
+# these elements in the freq. If element is not there then it means that we can make a 
+# consuctive list and we return false.
+# If element is in freq but its freq is 0, this means that we cant make the list again
+# so we return false. 
+
+# else we will decrement the freq of this element. If the freq now becomes 0 and this is 
+# first card of the list, then we will have pop from the min heap, so that we can now have
+# have a different min value. 
+
+# TC: O(n log n)
+# Making freq: O(n)
+# Making heap: O(n)
+# In worst case we will have to pop all the elements from the heap: O(n log n)
+# eg when k = 1
+
+class Solution:
+    def isPossibleDivide(self, nums: List[int], k: int) -> bool:
+        if len(nums) % k != 0:
+            return False
+        
+        freq = {}
+        for n in nums:
+            if n in freq:
+                freq[n] += 1
+            else:
+                freq[n] = 1
+        
+        heap = list(freq.keys())
+        heapify(heap)
+        
+        while heap:
+            first = heap[0]
+            
+            for consuctive in range(first, first+k):
+                if consuctive not in freq:
+                    return False
+                
+                if freq[consuctive] == 0 and consuctive != first:
+                    return False
+                
+                freq[consuctive] -= 1
+                
+                if freq[consuctive] == 0:
+                    heappop(heap)
+        
+        return True
