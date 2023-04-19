@@ -1,0 +1,66 @@
+# Explanation: First we will create a originalFreq map which will have the freq of each
+# char in the string. 
+
+# Now we will go through the string and and we will use a runningFreq map to get the
+# current freq till now. 
+# We need two things for each part: No of unique chars in this part
+# And all of those unique chars should have freq till now ie running freq equal to the 
+# original freq of that char. If this condition is satisfied then it means that 
+# all the unique chars in this part only occure in this part and not in any other part 
+# because their freq has gotten same as original freq. At this point we save the size in 
+# res. 
+
+
+class Solution:
+    def partitionLabels(self, s: str) -> List[int]:
+        originalFreq = {}
+        for c in s:
+            if c in originalFreq:
+                originalFreq[c] += 1
+            else:
+                originalFreq[c] = 1
+        
+        runningFreq = {}
+        uniqueCharacters = 0
+        charcatersInPath = 0
+        prev = 0
+        ans = []
+        
+        for j in range(len(s)):
+            if s[j] not in runningFreq:
+                runningFreq[s[j]] = 1
+                uniqueCharacters += 1
+            else:
+                runningFreq[s[j]] += 1
+            
+            if runningFreq[s[j]] == originalFreq[s[j]]:
+                charcatersInPath += 1
+                
+            if charcatersInPath == uniqueCharacters:
+                ans.append(j - prev + 1)
+                prev = j + 1
+                uniqueCharacters = 0
+                charcatersInPath = 0
+        return ans
+
+# https://leetcode.com/problems/partition-labels/discuss/1868842/JavaC%2B%2B-VISUALLY-EXPLAINEDDDDD!!
+
+class Solution:
+    def partitionLabels(self, s: str) -> List[int]:
+        lastIndexOfChar = {}
+        for j in range(len(s)):
+            lastIndexOfChar[s[j]] = j
+        
+        partition = 0
+        ans = []
+        prev = 0
+        for j in range(len(s)):
+            partition = max(partition, lastIndexOfChar[s[j]])
+            if j == partition:
+                ans.append(j - prev + 1)
+                prev = j + 1
+        return ans
+            
+        
+            
+            
