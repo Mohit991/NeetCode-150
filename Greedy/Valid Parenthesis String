@@ -1,0 +1,30 @@
+# https://leetcode.com/problems/valid-parenthesis-string/discuss/543521/Java-Count-Open-Parenthesis-O(n)-time-O(1)-space-Picture-Explain
+
+# Have two counters one counter (cmax) for counting the maximum number of right braces we can accommodate with current left braces and stars.
+# Have a second counter(cmin) which represents the minimum number of right braces that must be there further to make sure the whole string is valid(this number can’t be negative, so if it becomes negative then we put it to zero.
+
+class Solution:
+    def checkValidString(self, s: str) -> bool:
+        maxRightAccomodate, minRightFurther = 0, 0
+        
+        for c in s:
+            if c == '(':
+                maxRightAccomodate += 1
+                minRightFurther += 1
+            elif c == ')':
+                maxRightAccomodate -= 1
+                minRightFurther -= 1
+            else:
+                maxRightAccomodate += 1 #if `*` become '('
+                minRightFurther -= 1 #if `*` become ')'
+                #if '*' become `` then nothing happens
+                
+            if maxRightAccomodate < 0:
+                return False
+            # Currently, don't have enough open parentheses to match close parentheses-> Invalid    
+            #For example: ())(
+            
+            minRightFurther = max(minRightFurther, 0)
+            #It's invalid if open parentheses count < 0 that's why cmin can't be negative
+            
+        return minRightFurther == 0
