@@ -1,0 +1,22 @@
+# Explanation: https://www.youtube.com/watch?v=kShkQLQZ9K4
+
+class Solution:
+    def mergeTriplets(self, triplets: List[List[int]], target: List[int]) -> bool:
+        found = [False, False, False]
+        for triplet in triplets:
+            if target[0] < triplet[0] or target[1] < triplet[1] or target[2] < triplet[2]: 
+                continue
+            
+            if target[0] == triplet[0]:
+                found[0] = True
+            
+            if target[1] == triplet[1]:
+                found[1] = True
+                
+            if target[2] == triplet[2]:
+                found[2] = True
+                
+            if found[0] == True and found[1] == True and found[2] == True:
+                return True
+            
+        return False
