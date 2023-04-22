@@ -1,0 +1,77 @@
+# Recursive Solution. 
+# Time complexity: O(2^n)- since T(n) = T(n-1) + T(n-2)is an exponential time
+# Space complexity: O(n) - space for recursive function call stack
+
+class Solution:
+    def fib(self, n: int) -> int:
+        if n == 0:
+            return 0
+        if n == 1:
+            return 1 
+        return self.fib(n-1) + self.fib(n-2)
+
+##############################################################################
+
+# Dynamic Programming - Top Down Approach
+# Time complexity: O(n)
+# Space complexity: O(n)
+
+class Solution:
+    def calculateFib(self, n, memo):
+        if n in memo:
+            return memo[n]
+        if n == 0:
+            return 0
+        if n == 1:
+            return 1
+
+        memo[n] = self.calculateFib(n-1, memo) + self.calculateFib(n-2, memo)
+        return memo[n]
+    
+    def fib(self, n: int) -> int:
+        return self.calculateFib(n, {})
+
+#################################################################################
+
+# Dynamic Programming - Bottom Up Approach
+
+# Time complexity: O(n)
+# Space complexity: O(n)
+
+class Solution:
+    def fib(self, n: int) -> int:
+        if n == 0:
+            return 0
+        if n == 1:
+            return 1
+        
+        memo = [0,1] + [0 for i in range(n-1)]
+        
+        for i in range(2, len(memo)):
+            memo[i] = memo[i-1] + memo[i-2]
+        
+        return memo[-1]
+
+#################################################################################
+
+# Iterative
+
+# Time complexity: O(n)
+# Space complexity: O(1)
+    
+class Solution:
+    def fib(self, n: int) -> int:
+        if n == 0:
+            return 0
+        if n == 1:
+            return 1
+        
+        first = 0
+        second = 1
+    
+        for i in range(2, n+1):
+            sum = first + second
+            first = second
+            second = sum
+            
+        return second
