@@ -1,0 +1,79 @@
+# This questions is same as fibonacci sequence problem. 
+
+# Recursive Solution. 
+# Time complexity: O(2^n)- since T(n) = T(n-1) + T(n-2)is an exponential time
+# Space complexity: O(n) - space for recursive function call stack
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n == 1:
+            return 1
+        if n == 2:
+            return 2
+        return self.climbStairs(n-1) + self.climbStairs(n-2)
+    
+##############################################################################
+
+# Dynamic Programming - Top Down Approach
+# Time complexity: O(n)
+# Space complexity: O(n)
+
+class Solution:
+    def calculateSteps(self, n, memo):
+        if n in memo:
+            return memo[n]
+        if n == 1:
+            return 1
+        if n == 2:
+            return 2
+
+        memo[n] = self.calculateSteps(n-1, memo) + self.calculateSteps(n-2, memo)
+        return memo[n]
+    
+    def climbStairs(self, n: int) -> int:
+        return self.calculateSteps(n, {})
+        
+##############################################################################
+
+# Dynamic Programming - Bottom Up Approach
+
+# Time complexity: O(n)
+# Space complexity: O(n)
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n == 1:
+            return 1
+        if n == 2:
+            return 2
+        
+        memo = [1,1] + [0 for i in range(n-1)]
+        
+        for i in range(2, len(memo)):
+            memo[i] = memo[i-1] + memo[i-2]
+        
+        return memo[-1]
+
+#################################################################################
+
+# Iterative
+
+# Time complexity: O(n)
+# Space complexity: O(1)
+
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n == 1:
+            return 1
+        if n == 2:
+            return 2
+        
+        first = 1
+        second = 1
+    
+        for i in range(2, n+1):
+            sum = first + second
+            first = second
+            second = sum
+            
+        return second
