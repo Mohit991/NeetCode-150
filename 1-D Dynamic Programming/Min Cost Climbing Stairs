@@ -1,0 +1,66 @@
+# We start at either step 0 or step 1. The target is to reach either last or second last step, whichever is minimum.
+
+# Step 1 - Identify a recurrence relation between subproblems. In this problem,
+# Recurrence Relation:
+# mincost(i) = cost[i]+min(mincost(i-1), mincost(i-2))
+# Base cases:
+# mincost(0) = cost[0]
+# mincost(1) = cost[1]
+
+# Step 2 - Covert the recurrence relation to recursion
+class Solution:
+    def minCost(self, cost, index):
+        if index == 0:
+            return cost[0]
+        if index == 1:
+            return cost[1]
+        return cost[index] + min(self.minCost(cost, index-1), self.minCost(cost, index-2))   
+    
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+        n = len(cost)
+        return min(self.minCost(cost, n-1), self.minCost(cost, n-2))
+
+# Step 3 - Optimization 1 - Top Down DP - Add memoization to recursion - From exponential to linear.
+class Solution:
+    def minCost(self, cost, index, memo):
+        if index in memo:
+            return memo[index]
+        if index == 0:
+            return cost[0]
+        if index == 1:
+            return cost[1]
+        memo[index] = cost[index] + min(self.minCost(cost, index-1, memo), self.minCost(cost, index-2, memo))   
+        return memo[index]
+    
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+        n = len(cost)
+        return min(self.minCost(cost, n-1, {}), self.minCost(cost, n-2, {}))
+
+# Step 4 - Optimization 2 -Bottom Up DP - Convert recursion to iteration - Getting rid of recursive stack
+class Solution:
+        def minCostClimbingStairs(self, cost: List[int]) -> int:
+            for i in range(2, len(cost)):
+                cost[i] = cost[i] + min(cost[i-1], cost[i-2])
+            return min(cost[-1], cost[-2])
+
+# Step 5 - Optimization 3 - Fine Tuning - Reduce O(n) space to O(1).
+class Solution:
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+        first = cost[0]
+        second = cost[1]
+        for i in range(2, len(cost)):
+            res = cost[i] + min(first, second)
+            first = second
+            second = res
+        return min(first, second)
+ 
+# Top Down DP:
+class Solution:
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+        for i in range(len(cost)-3, -1, -1):
+            cost[i] = min(cost[i] + cost[i+1], cost[i] + cost[i+2])
+            # cost[i] += min(cost[i+1], cost[i+2])
+        return min(cost[0], cost[1])
+        
+
+        
