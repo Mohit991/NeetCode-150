@@ -1,0 +1,110 @@
+class Solution:
+    def robbing(self, nums, i):
+        if i >= len(nums):
+            return 0
+        lootWithCurrent = nums[i] + self.robbing(nums,i+2)
+        lootWithoutCurrent = self.robbing(nums,i+1)
+        return max(lootWithCurrent, lootWithoutCurrent)
+    
+    def rob(self, nums: List[int]) -> int:
+        startFromFirst = self.robbing(nums, 0)
+        startFromSecond = self.robbing(nums, 1)
+        return max(startFromFirst, startFromSecond)
+
+class Solution:
+    def robbing(self, nums, i, memo):
+        if i in memo:
+            return memo[i]
+        if i >= len(nums):
+            return 0
+        lootWithCurrent = nums[i] + self.robbing(nums,i+2, memo)
+        lootWithoutCurrent = self.robbing(nums,i+1, memo)
+        memo[i] = max(lootWithCurrent, lootWithoutCurrent)
+        return memo[i]
+    
+    def rob(self, nums: List[int]) -> int:
+        startFromFirst = self.robbing(nums, 0, {})
+        startFromSecond = self.robbing(nums, 1, {})
+        return max(startFromFirst, startFromSecond)
+
+##########################################################################
+
+class Solution:
+    def robbing(self, nums, i):
+        if i < 0:
+            return 0
+        if i == 0:
+            return nums[0]
+        if i == 1:
+            return nums[1]
+        
+        return nums[i] + max(self.robbing(nums, i-2), self.robbing(nums, i-3))
+    def rob(self, nums: List[int]) -> int:
+        n = len(nums)
+        return max(self.robbing(nums, n - 1), self.robbing(nums, n - 2))
+
+class Solution:
+    def robbing(self, nums, i, memo):
+        if i in memo:
+            return memo[i]
+        if i < 0:
+            return 0
+        if i == 0:
+            return nums[0]
+        if i == 1:
+            return nums[1]
+        
+        memo[i] = nums[i] + max(self.robbing(nums, i-2, memo), self.robbing(nums, i-3, memo))
+        return memo[i]
+    
+    def rob(self, nums: List[int]) -> int:
+        n = len(nums)
+        return max(self.robbing(nums, n - 1, {}), self.robbing(nums, n - 2, {}))
+
+##########################################################################
+
+
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        n = len(nums)
+        if n == 1:
+            return nums[0]
+        if n == 2:
+            return max(nums[0], nums[1])
+        if n == 3:
+            return max(nums[0]+nums[2], nums[1])
+        
+        nums[2] = nums[2] + nums[0]
+    
+        for i in range(3, n):
+            nums[i] += max(nums[i-2], nums[i-3])
+                    
+        return max(nums[-1], nums[-2])
+
+##########################################################################
+
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        if nums == []: return 0
+        if len(nums) == 1: return nums[0]
+        
+        memo = [0]*(len(nums) + 1)
+        
+        memo[1] = nums[0]
+        
+        for i in range(2, len(memo)):
+            memo[i] = max(memo[i-1], memo[i-2] + nums[i-1])
+            
+        return memo[-1]   
+
+##########################################################################
+
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        rob1, rob2 = 0, 0
+
+        for n in nums:
+            temp = max(n + rob1, rob2)
+            rob1 = rob2
+            rob2 = temp
+        return rob2
