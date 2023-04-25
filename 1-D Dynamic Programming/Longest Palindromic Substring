@@ -223,3 +223,48 @@ class Solution:
                 
             i = jump     
         return res         
+########################################################################
+
+# Dynamic Programming
+# The problem can be broken down into subproblems which are reused several times. Overlapping subproblems lead us to Dynamic Programming.
+
+# We decompose the problem as follows:
+
+# State variable
+# The start index and end index of a substring can identify a state, which influences our decision.
+# So the state variable is state(start, end) indicates whether s[start, end] inclusive is palindromic
+
+# Goal state
+# max(end - start + 1) for all state(start, end) = true
+
+# State transition
+
+# for start = end (e.g. 'a'), state(start, end) is True
+# for start + 1 = end (e.g. 'aa'), state(start, end) is True if s[start] = s[end]
+# for start + 2 = end (e.g. 'aba'),  state(start, end) is True if s[start] = s[end] and state(start + 1, end - 1)
+# for start + 3 = end (e.g. 'abba'),  state(start, end) is True if s[start] = s[end] and state(start + 1, end - 1)
+# ...
+# This approach takes O(n^2) time complexity, O(n^2) space complexity, where n is the length of s.
+
+
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        n = len(s)
+        dp = [[False] * n for _ in range(n)]
+        for i in range(n):
+            dp[i][i] = True
+            
+        longestPalindromeStart, longestPalindromeLength = 0, 1
+        
+        for end in range(0, n):
+            for start in range(end-1, -1, -1):
+                if s[start] == s[end]:
+                    if end - 1 == start or dp[start + 1][end - 1]:
+                        dp[start][end] = True
+                        palindromeLength = end - start + 1
+                        
+                        if longestPalindromeLength < palindromeLength:
+                            longestPalindromeLength = palindromeLength
+                            longestPalindromeStart = start 
+        return s[longestPalindromeStart: longestPalindromeStart + longestPalindromeLength]
+        
