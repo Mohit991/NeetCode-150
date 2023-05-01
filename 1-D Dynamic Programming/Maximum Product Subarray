@@ -1,0 +1,39 @@
+# Explanation: When we want to find the max sum of subarray, we reject the current sum 
+# when it becomes 0, this is because when this is 0, it will not contribute to the 
+# next sum. But when we want to find the max product, we cant reject the current product
+# when it is less than 0, this is because we can still have a negative number ahead which
+# will make this negative product which we rejected as a big positive answer. 
+
+# The idea is to keep both max prodcut till now and min product till as saved in 
+# two variables. When we get a negative number we must swap these two values. 
+# When we get a negative number, if we multiply it with the currentMinProduct, we will get a 
+# positive number(if we dont swap) and the oppsite will happen to the currentMaxProduct.
+# We want to have max product in currentMaxProduct and min in currentMinProduct. 
+# If we want this then we will have to swap these two when we get a negative number. 
+# For both of them, for each number, either we take that number or we take the current
+# number whichever is min/max depending upon which value we are calculating 
+# currentMinProduct/currentMaxProduct
+
+# Finally take the maxProduct = max(maxProduct, currentMaxProduct).
+
+
+
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        maxProduct = nums[0]
+        currentMinProduct = nums[0]
+        currentMaxProduct = nums[0]
+        
+        for i in range(1, len(nums)):
+            if nums[i] < 0:
+                currentMinProduct, currentMaxProduct = currentMaxProduct, currentMinProduct
+            
+            currentMinProduct = min(nums[i], currentMinProduct * nums[i])
+            currentMaxProduct = max(nums[i], currentMaxProduct * nums[i])
+            
+            maxProduct = max(maxProduct, currentMaxProduct)
+        
+        return maxProduct
+                
+            
+            
