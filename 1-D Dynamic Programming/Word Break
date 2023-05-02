@@ -1,0 +1,154 @@
+# Brute Force Approch:
+# Recursion
+# TC - O(2^n)
+#Call the method with s initially, now apply a loop with the dict and if s starts with any word in dict 
+#then remove that part from s and call the method again. If s become '' then you have found the solution.
+#if method returns true then return true from here as well. 
+#if loop ends return False becuase you did not find the solution. 
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        def dfs(s):
+            if s == '':
+                return True
+            
+            for i in range(len(wordDict)):
+                if s.startswith(wordDict[i]):
+                    if dfs(s[len(wordDict[i]):]):
+                        return True
+                
+        return dfs(s)    
+
+#############################################################
+#Brute Force Approch:
+# Recursion
+# TC - Try to figure it out
+#You can also try to build the solution from the ''.
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        def dfs(st):
+            if st == s:
+                return True
+            
+            if len(st) > len(s):
+                return False
+            
+            for i in range(len(wordDict)):
+                if dfs(st + wordDict[i]):
+                    return True
+                
+        return dfs('')    
+    
+##############################################################
+#DP Approch:
+# Recursion with DP
+# TC - Try to figure it out
+#To introduce DP to this solution. For every string that does not have a solution we will put that in a set. 
+#Rememeber that loop ends iff we could not find a solution. Then if we see s in set then return False. 
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        def dfs(s, memo):
+            if s in memo:
+                return False
+            
+            if s == '':
+                return True
+            
+            for i in range(len(wordDict)):
+                if s.startswith(wordDict[i]):
+                    if dfs(s[len(wordDict[i]):], memo):
+                        return True
+                    
+            memo.add(s)
+            return False
+        
+        return dfs(s, set()) 
+
+###############################################################
+# #DP Approch:
+#Tabulation
+# TC - len(s) ^ 3
+
+#To use tabulation, create an array of length len(s) + 1, call it f, put f[0] = True and rest as False. 
+# f[i] stands for whether subarray(0, i) can be segmented into words from the dictionary. 
+# So f[0] means whether subarray(0, 0) (which is an empty string) can be segmented, 
+# and of course the answer is yes.
+#Use two loops i from 1 to last and j from 0 to i-1. Here if f[j] is true that means substring 0 to j is True
+#then we will just check j to i substring. If it is there then put f[i] = True.
+#at last return f[len[s]]
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        # 
+        f = [True] + [False] * (len(s))
+        
+        for i in range(1, len(s)+1):
+            for j in range(0,i):
+                if f[j]:
+                    if s[j:i] in wordDict:
+                        f[i] = True
+        return f[len(s)]
+
+##############################################################
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        def findWord(s, index):            
+            if index >= len(s):
+                return True
+            
+            for i in range(len(wordDict)):
+                if s[index:].startswith(wordDict[i]):
+                    size = len(wordDict[i])
+                    if findWord(s, index + size):
+                        return True
+            return False
+        return findWord(s, 0)
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        def findWord(s, index, memo):
+            if index in memo:
+                return False
+            
+            if index >= len(s):
+                return True
+            
+            for i in range(len(wordDict)):
+                if s[index:].startswith(wordDict[i]):
+                    size = len(wordDict[i])
+                    if findWord(s, index + size, memo):
+                        return True
+                    else:
+                        memo.add(index)
+            return False
+        return findWord(s, 0, set())
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        memo = [False] * (len(s) + 1)
+        memo[0] = True
+        
+        for i in range(len(memo)):
+            if memo[i]:
+                for word in wordDict:
+                    if s[i:].startswith(word):
+                        if i + len(word) == len(s):
+                            return True
+                        memo[i + len(word)] = True
+        
+        return memo[-1]
+
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        f = [True] + [False] * (len(s))
+        wordDictSet = set(wordDict)
+        
+        for i in range(1, len(s)+1):
+            for j in range(0,i):
+                if f[j]:
+                    if s[j:i] in wordDictSet:
+                        f[i] = True
+        return f[len(s)]
+    
+                
