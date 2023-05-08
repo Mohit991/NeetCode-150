@@ -1,0 +1,73 @@
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        memo = [0] * len(nums)
+        longest = 0
+        
+        for i in range(1, len(nums)):
+            for j in range(0, i):
+                if nums[i] > nums[j]:
+                    memo[i] = max(memo[i], memo[j] + 1)
+                    longest = max(longest, memo[i])
+        # print(memo)
+        return longest + 1
+
+###########################################################
+
+
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        def dfs(index, prev):
+            if index >= len(nums):
+                return 0
+            
+            take = 0
+            if nums[index] > prev:
+                take = dfs(index + 1, nums[index]) + 1
+            
+            dontTake = dfs(index + 1, prev)
+            
+            return max(take, dontTake)
+        
+        return dfs(0, -inf)
+
+###########################################################
+
+
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        def dfs(index, prevIndex):
+            if index >= len(nums):
+                return 0
+            
+            take = 0
+            if prevIndex == -1 or nums[index] > nums[prevIndex]:
+                take = dfs(index + 1, index) + 1
+            
+            dontTake = dfs(index + 1, prevIndex)
+            
+            return max(take, dontTake)
+        
+        return dfs(0, -1)
+    
+##########################################################
+
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        def dfs(index, prevIndex, memo):
+            if (index, prevIndex) in memo:
+                return memo[(index, prevIndex)]
+            
+            if index >= len(nums):
+                return 0
+            
+            take = 0
+            if prevIndex == -1 or nums[index] > nums[prevIndex]:
+                take = dfs(index + 1, index, memo) + 1
+            
+            dontTake = dfs(index + 1, prevIndex, memo)
+            
+            memo[(index, prevIndex)] = max(take, dontTake)
+            return memo[(index, prevIndex)]  
+        
+        return dfs(0, -1, {})
+        
