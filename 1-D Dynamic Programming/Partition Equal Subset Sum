@@ -1,0 +1,102 @@
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        totalSum = sum(nums)
+        if totalSum % 2 != 0:
+            return False
+        
+        partSum = int(totalSum / 2)
+        
+        def findSum(index, partSum):
+            if partSum == 0: 
+                return True
+            
+            if index >= len(nums) or partSum < 0:
+                return False
+            
+            takeCurrentNum = findSum(index + 1, partSum - nums[index])
+            dontTakeCurrentNum = findSum(index + 1, partSum)
+            
+            return takeCurrentNum or dontTakeCurrentNum
+        
+        return findSum(0, partSum)
+
+############################################################
+
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        totalSum = sum(nums)
+        if totalSum % 2 != 0:
+            return False
+        
+        partSum = int(totalSum / 2)
+        
+        def findSum(index, partSum, memo):
+            if (index, partSum) in memo:
+                return False
+            
+            if partSum == 0: 
+                return True
+            
+            if index >= len(nums) or partSum < 0:
+                return False
+            
+            takeCurrentNum = findSum(index + 1, partSum - nums[index], memo)
+            dontTakeCurrentNum = findSum(index + 1, partSum, memo)
+            
+            memo.add((index, partSum))
+            return takeCurrentNum or dontTakeCurrentNum
+        
+        return findSum(0, partSum, set())
+    
+############################################################
+
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        totalSum = sum(nums)
+        if totalSum % 2 != 0:
+            return False
+        
+        partSum = int(totalSum / 2)
+        
+        dp = [True] + [False] * partSum
+        
+        for num in nums:
+            for target in range(partSum, -1, -1):
+                if target - num >= 0:
+                    dp[target] = dp[target] or dp[target - num]
+                
+                if dp[partSum]:
+                    return True
+        
+        return False
+            
+############################################################
+
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        if sum(nums) % 2:
+            return False
+
+        dp = set()
+        dp.add(0)
+        target = sum(nums) // 2
+
+        for i in range(len(nums)):
+            if nums[i] > target:
+                continue
+                
+            nextDP = set()
+            for t in dp:
+                nextDP.add(t)
+                if (t + nums[i]) == target:
+                    return True
+                if (t + nums[i]) > target:
+                    continue
+                nextDP.add(t + nums[i])
+                
+            dp = nextDP
+        return False
+
+            
+        
+        
