@@ -1,0 +1,94 @@
+# currentIndex - index where you are at
+# canBuy - Can u buy the stock? if it is true you can buy but cant sell
+# if False then you cant buy but you can sell.
+# initially it is True because you can buy at the start. 
+
+# you can choose not to buy or sell whenever you are in a position to buy a sell.
+# canBuy is true, now you have two choices:
+# 1. buy and your profit will decrease by the current stock price ie prices[currentIndex]
+# 2. dont buy and move on to next index. Profit is not affacted. 
+
+# Same with sell also. 
+# Sell and your profit will increase by prices[currentIndex]
+# Also if you choose to sell, then you have to make sure that you dont go to next index,
+# but you move onto currentIndex+2 because currentIndex+1 will be the cooldown day. 
+# If you dont sell, move onto the next index, profit is unaffacted. 
+
+# also keep in mind that if you buy change canBuy to False.
+# and if you sell, change canBuy to True. 
+
+# TC - O(2^n)
+# SC - O(n)
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        def findProfit(currentIndex, canBuy, profit):
+            if currentIndex >= len(prices):
+                return profit
+        
+            if canBuy:
+                buy = findProfit(currentIndex+1, False, profit-prices[currentIndex])
+                dontBuy = findProfit(currentIndex+1, True, profit)
+                return max(buy, dontBuy)
+            else:
+                sell = findProfit(currentIndex+2, True, profit+prices[currentIndex])
+                dontSell = findProfit(currentIndex+1, False, profit)
+                return max(sell, dontSell)
+            
+        return findProfit(0, True, 0)
+    
+
+####################################################################################
+
+# TC - O(2^n)
+# SC - O(n)
+
+# For some reason below solution does not work. 
+# class Solution:
+#     def maxProfit(self, prices: List[int]) -> int:
+#         def findProfit(currentIndex, canBuy, profit, memo):
+#             if currentIndex >= len(prices):
+#                 return profit
+            
+#             if (currentIndex, canBuy) in memo:
+#                 print(currentIndex, '  ', currentIndex, canBuy, '  ', memo[(currentIndex, canBuy)])
+#                 return memo[(currentIndex, canBuy)]
+        
+#             if canBuy:
+#                 buy = findProfit(currentIndex+1, False, profit-prices[currentIndex], memo)
+#                 dontBuy = findProfit(currentIndex+1, True, profit, memo)
+#                 memo[(currentIndex, True)] = max(buy, dontBuy)
+#             else:
+#                 sell = findProfit(currentIndex+2, True, profit+prices[currentIndex], memo)
+#                 dontSell = findProfit(currentIndex+1, False, profit, memo)
+#                 memo[(currentIndex, False)] = max(sell, dontSell)
+#             return memo[(currentIndex, canBuy)]
+#         return findProfit(0, True, 0, {})
+    
+##########################################################################################
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        # State: Buying or Selling?
+        # If Buy -> i + 1
+        # If Sell -> i + 2
+
+        dp = {}  # key=(i, buying) val=max_profit
+
+        def dfs(i, buying):
+            if i >= len(prices):
+                return 0
+            if (i, buying) in dp:
+                return dp[(i, buying)]
+
+            cooldown = dfs(i + 1, buying)
+            if buying:
+                buy = dfs(i + 1, not buying) - prices[i]
+                dp[(i, buying)] = max(buy, cooldown)
+            else:
+                sell = dfs(i + 2, not buying) + prices[i]
+                dp[(i, buying)] = max(sell, cooldown)
+            return dp[(i, buying)]
+
+        return dfs(0, True)
+
