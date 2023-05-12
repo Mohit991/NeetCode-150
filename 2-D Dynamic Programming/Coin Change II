@@ -1,0 +1,85 @@
+# Using Recursion.
+# TC - O(coins ^ amount)
+# SC - O(amount)
+# In this solution, we are using a local variable to store the answer. 
+
+class Solution:
+    def change(self, amount: int, coins: List[int]) -> int:
+        def findCombinations(index, amount):
+            if amount == 0:
+                return 1
+            
+            if index >= len(coins) or amount < 0:
+                return 0
+            
+            take = findCombinations(index, amount - coins[index]) #Take the coin
+            dontTake = findCombinations(index + 1, amount) #Dont take the coin
+            return take + dontTake
+        
+        return findCombinations(0, amount)
+
+    
+################################################################################
+
+# Using Recursion and memoization.
+# TC - O(coins * amount)
+# SC - O(amount)
+# In this solution, we are using a local variable to store the answer. 
+
+class Solution:
+    def change(self, amount: int, coins: List[int]) -> int:
+        def findCombinations(index, amount, memo):
+            if (index, amount) in memo:
+                return memo[(index, amount)]
+            
+            if amount == 0:
+                return 1
+            
+            if index >= len(coins) or amount < 0:
+                return 0
+            
+            take = findCombinations(index, amount - coins[index], memo) #Take the coin
+            dontTake = findCombinations(index + 1, amount, memo) #Dont take the coin
+            memo[(index, amount)] = take + dontTake 
+            return memo[(index, amount)]
+        
+        return findCombinations(0, amount, {})
+        
+################################################################################
+
+class Solution:
+    def change(self, amount: int, coins: List[int]) -> int:
+        #Ways array will track the number of possible ways to construct the amount
+        #Index of this array is the amount which we want to contruct
+        #eg ways[0] means number of possible ways to make amount = 0 which is 1 always
+        # ways[1] means number of possible ways to make amount = 1 
+        # ways[2] means number of possible ways to make amount = 2 
+        ways = [1] + [0]*amount
+        
+        #We will pick every coin
+        for coin in coins:
+            #We will range from coin value to the amount
+            for currentAmount in range(coin, amount+1):
+                #we want to find out no of ways we can make the amount using all the previous coins and current coin together.
+                #ways[currentAmount] will contain the number of ways to make the current amount using the all the previous coins
+                #ways[currentAmount - coin] will contain the number of ways to make the amount = currentAmount - coin 
+                #using the all the previous coins. If we take the current amount and subtract the coin then w
+                #ways we have, we can add current coin to all of them and use all of the ways. 
+                # coins = 1,2,5
+                #ways = [1, 0, 0, 0, 0, 0] all are 0.
+                #take coin = 1
+                #ways = [1,1,1,1,1,1]
+                #coin = 2
+                #for currentAmount = 2
+                #using coin = 1, I have 1 ways to make 2
+                #now 0 can be made from 2 using 1 ways using 0, 2 coins
+                #now when I want to make amount = 2, I take 1 + 1 = 2
+                #bc i have 1 ways using 1 and 2-2 = 0 and I can make 2 using 0, 2 coins and I can add a 2 to that and can make  a
+                #2.
+                ways[currentAmount] += ways[currentAmount - coin]
+                
+        #Finally return the ways found for amount    
+        return ways[amount] 
+        
+        
+
