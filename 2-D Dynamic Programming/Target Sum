@@ -1,0 +1,54 @@
+# We will simply take two paths for each element. 
+# Take the element as positive ie add
+# take as negative that is subtract
+# If result == target and we are at the end of the list(we have used all the elements) then return 1
+# bc this is a possible solution. 
+# if we go beyond the index, return 0
+# TC - O(2^n); 2 choices for each of the n elements
+# SC - O(n); depth of the stack
+
+class Solution:
+    def findTargetSumWays(self, nums: List[int], target: int) -> int:
+        def dfs(index, result):
+            if result == target and index == len(nums):
+                return 1
+            
+            if index >= len(nums):
+                return 0
+            
+            add = dfs(index + 1, result + nums[index])
+            subtract = dfs(index + 1, result - nums[index])
+            
+            return add + subtract
+        
+        return dfs(0, 0)
+        
+###############################################################################
+
+# Using memoization to optimize.
+# TC - O(n * sum of all elements of the array)
+# TC - O(n)
+# For TC, we can pass any num as result between -sum and +sum. 
+# eg 1,2,3; we can pass any num as result between 6 and -6 in the recursive. 
+# if I pass any number again then that will be taken from the memo. 
+# hence TC - O(n * sum of all elements of the array)
+
+class Solution:
+    def findTargetSumWays(self, nums: List[int], target: int) -> int:
+        def dfs(index, result, memo):
+            if (index, result) in memo:
+                return memo[(index, result)]
+            
+            if result == target and index == len(nums):
+                return 1
+            
+            if index >= len(nums):
+                return 0
+            
+            add = dfs(index + 1, result + nums[index], memo)
+            subtract = dfs(index + 1, result - nums[index], memo)
+            
+            memo[(index, result)] = add + subtract
+            return memo[(index, result)] 
+        
+        return dfs(0, 0, {})
