@@ -1,0 +1,67 @@
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        if len(s1) + len(s2) != len(s3):
+            return False
+        
+        def makeString(i1, i2, i3, memo):
+            if (i1, i2) in memo:
+                return False
+            
+            if i3 == len(s3) and i1 == len(s1) and i2 == len(s2):
+                return True
+            
+            if i3 >= len(s3):
+                return False
+            
+            a, b = False, False
+            if i1 < len(s1) and i2 < len(s2) and s1[i1] == s3[i3] and s2[i2] == s3[i3]:
+                a = makeString(i1 + 1, i2, i3 + 1, memo)
+                b = makeString(i1, i2 + 1, i3 + 1, memo)
+            elif i1 < len(s1) and s1[i1] == s3[i3]:
+                a = makeString(i1 + 1, i2, i3 + 1, memo)
+            elif i2 < len(s2) and s2[i2] == s3[i3]:
+                b = makeString(i1, i2 + 1, i3 + 1, memo)
+            
+            if not a or not b:
+                memo.add((i1, i2))
+            return a or b
+    
+        return makeString(0, 0, 0, set())
+    
+#############################################################################
+
+class Solution:
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        if len(s1) + len(s2) != len(s3):
+            return False
+        
+        def makeString(i1, i2, currentString, memo):
+            # print(currentString)
+            if (i1, i2, currentString) in memo:
+                return False
+            
+            if currentString == s3 and i1 == len(s1) and i2 == len(s2):
+                return True
+            
+            if len(currentString) >= len(s3):
+                return False
+        
+            
+            a,b = False, False
+            if i1 < len(s1) and i2 < len(s2):
+                a = makeString(i1+1, i2, currentString + s1[i1], memo)
+                b = makeString(i1, i2+1, currentString + s2[i2], memo)
+            elif i1 >= len(s1) and i2 < len(s2):
+                b = makeString(i1, i2+1, currentString + s2[i2], memo)
+            elif i2 >= len(s2) and i1 < len(s1):
+                a = makeString(i1+1, i2, currentString + s1[i1], memo)
+            
+            memo[(i1, i2, currentString)] = a or b
+            return a or b
+        
+        return makeString(0, 0, '', {})
+    
+    
+
+                
+    
