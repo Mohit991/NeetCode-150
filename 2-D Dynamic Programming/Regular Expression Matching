@@ -1,0 +1,27 @@
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        def match(i, j, memo):
+            if (i, j) in memo:
+                return False
+            
+            if i >= len(s) and j >= len(p):
+                return True
+            
+            if j >= len(p):
+                return False
+
+            if j + 1 < len(p) and p[j+1] == '*':
+                dontTake = match(i, j + 2, memo) 
+                take = False
+                if i < len(s) and (s[i] == p[j] or p[j] == '.'):
+                    take = match(i+1, j, memo)
+                memo[(i, j)] = take or dontTake
+                return take or dontTake
+            elif i < len(s) and j < len(p) and (p[j] == '.' or s[i] == p[j]):
+                memo[(i, j)] = match(i + 1, j + 1, memo)
+                return memo[(i, j)]
+            
+            return False
+                
+        
+        return match(0, 0, {})
