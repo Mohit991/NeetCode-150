@@ -1,0 +1,39 @@
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        def dfs(nums, path):
+            if nums == []:
+                res.append(path)
+                return
+                
+            for i in range(len(nums)):
+                dfs(nums[:i] + nums[i+1:], path + [nums[i]])
+            
+            return
+        
+        dfs(nums, [])
+        return res
+    
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        path = []
+        pathSet = set()
+        
+        def dfs():
+            if len(path) == len(nums):
+                res.append(path.copy())
+                return
+                
+            for i in range(len(nums)):
+                if nums[i] in pathSet:
+                    continue
+                pathSet.add(nums[i])
+                path.append(nums[i])
+                dfs()
+                path.pop()
+                pathSet.remove(nums[i])
+                
+            return
+        dfs()
+        return res
