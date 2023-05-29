@@ -1,0 +1,54 @@
+# Explanation: when we place a queen at a slot, we need to make sure that
+# next queen is not placed in any of the slot the first queen can attack. 
+# ie not in the same row, not in the same column and not in the same diagonals.
+# To avoid such a situation, when we place a queen, we will place all the
+# slots it can attack in blockedCols(column), blockedPositiveDiag
+# (uprising diagonal), blockedNegativeDiag(downrising diagonal). 
+# How do we know the diagonals?
+# uprising diagonal: row + col will be same for all slots in same uprising diagonal.
+
+# downrising diagonal: row - col will be same for all slots in same downrising diagonal.
+
+# Once we do that we will ignore these slots, as we move forward. 
+
+
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        res = []
+
+        blockedCols = set()
+        blockedPositiveDiag = set()
+        blockedNegativeDiag = set()
+        
+        board = [["." for i in range(n)] for i in range(n)]
+        
+        def backtrack(row):
+            # print(currentRes)
+            if row == n:
+                copy = ["".join(row) for row in board]
+                res.append(copy)
+                return
+            for col in range(n):
+                if col in blockedCols or row + col in blockedPositiveDiag or row - col in blockedNegativeDiag:
+                    continue
+                    
+                blockedCols.add(col)
+                blockedPositiveDiag.add(row+col)
+                blockedNegativeDiag.add(row-col)
+                board[row][col] = "Q"
+                
+                backtrack(row + 1)
+                
+                blockedCols.remove(col)
+                blockedPositiveDiag.remove(row+col)
+                blockedNegativeDiag.remove(row-col)
+                board[row][col] = "."
+                
+            return 
+    
+        backtrack(0)
+        return res
+                                     
+                    
+            
+        
