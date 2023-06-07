@@ -1,0 +1,36 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+# We will traverse the tree from the root. Since we want all the nodes where all the 
+# values from root to this node are less than or equal then the node is called good. 
+# So, we will send the max value so far towards the bottom, if the value of the node
+# is greater than or equal to this max node then that means it is a good node, 
+# then we add 1 to the result. 
+
+# If the value of the node is smaller than the maxValue then that node is not good,
+# but still we might see good nodes below this node, hence we go left and right and
+# we will send the already max value towards them. 
+
+# If the value of current node is greater than or equal to max val, then it is a good node
+# also there is a possibility of finding more good nodes towards the bottom. So, we will
+# send current node's value as max node towrds left and right nodes. 
+
+
+class Solution:
+    def goodNodes(self, root: TreeNode) -> int:
+        def traverse(root, maxVal):
+            if not root:
+                return 0
+            
+            if root.val >= maxVal:
+                return traverse(root.left, root.val) + traverse(root.right, root.val) + 1
+            else:
+                return traverse(root.left, maxVal) + traverse(root.right, maxVal)
+            
+        return traverse(root, -inf) 
+            
+            
