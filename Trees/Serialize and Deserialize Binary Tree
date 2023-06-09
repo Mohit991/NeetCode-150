@@ -1,0 +1,68 @@
+# Using global variable for deserialize
+class Codec:
+    def serialize(self, root):
+        if not root:
+            return 'N'
+        return str(root.val) + ',' + self.serialize(root.left) + ',' + self.serialize(root.right) 
+        
+
+    def deserialize(self, data):
+        preorder = []        
+        last = 0
+        self.i = 0
+        
+        # for i in range(len(data)):
+        #     if data[i] == ',':
+        #         preorder.append(data[last:i])
+        #         last = i + 1
+        
+        preorder = data.split(",")
+        
+        def constructTree():
+            if self.i >= len(preorder):
+                return None
+            # print(i)
+            nodeVal = preorder[self.i]
+            self.i += 1
+            if nodeVal == 'N':
+                return None
+            node = TreeNode(int(nodeVal))
+            node.left = constructTree()
+            node.right = constructTree()
+            return node
+        
+        return constructTree()
+
+
+###########################################################################
+
+class Codec:
+
+    def serialize(self, root):
+        if not root:
+            return 'N'
+        return str(root.val) + ',' + self.serialize(root.left) + ',' + self.serialize(root.right) 
+        
+
+    def deserialize(self, data):
+        preorder = []        
+        last = 0
+        # for i in range(len(data)):
+        #     if data[i] == ',':
+        #         preorder.append(data[last:i])
+        #         last = i + 1
+        
+        preorder = data.split(",")
+        
+        def constructTree(preorder):
+            if not preorder:
+                return None
+            nodeVal = preorder.pop(0)
+            if nodeVal == 'N':
+                return None
+            node = TreeNode(int(nodeVal))
+            node.left = constructTree(preorder)
+            node.right = constructTree(preorder)
+            return node
+        
+        return constructTree(preorder)
