@@ -1,0 +1,46 @@
+# We will create a set cantFlip which will contain all the cells which we cant flip
+# to 'X' as per this question. 
+# We will go through 1st row columns, last row cols, all rows of first cols,
+# all rows of last cols. We will add all the cells which cant be flipped in 
+# the cantFlip set using dfs function. 
+
+# Once we have all the cells in cantFlip, we will go through the board and convert
+# all the cells not in cantFlip to 'X' which is our solution. 
+
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        row, col = len(board), len(board[0])
+        cantFlip = set()
+        
+        def dfs(i, j):
+            cantFlip.add((i, j))
+            if i-1 >= 0 and board[i-1][j] == 'O' and (i-1, j) not in cantFlip:
+                dfs(i-1, j)
+            if i+1 < row and board[i+1][j] == 'O' and (i+1, j) not in cantFlip:
+                dfs(i+1, j)
+            if j-1 >= 0 and board[i][j-1] == 'O' and (i, j-1) not in cantFlip:
+                dfs(i, j-1)
+            if j+1 < col and board[i][j+1] == 'O' and (i, j+1) not in cantFlip:
+                dfs(i, j+1)
+            return
+        
+        for c in range(col):
+            if board[0][c] == 'O' and (0, c) not in cantFlip:
+                dfs(0, c)
+            if board[row-1][c] == 'O' and (row-1, c) not in cantFlip:
+                dfs(row-1, c)
+        
+        for r in range(row):
+            if board[r][0] == 'O' and (r, 0) not in cantFlip:
+                dfs(r, 0)
+            if board[r][col-1] == 'O' and (r, col-1) not in cantFlip:
+                dfs(r, col-1)
+        
+        for r in range(row):
+            for c in range(col):
+                if (r, c) not in cantFlip:
+                    board[r][c] = 'X'
+                
+        
+        
+        
