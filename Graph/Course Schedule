@@ -1,0 +1,39 @@
+#First thing we do is to create a graph out of this prerequisites list. For that we use 
+#defaultdict. Now we put values from prerequisites to the graph. 
+#Then we apply DFS and we just try to find if there are any cycles in the grpah or not. 
+#If there is a cycle then it is not possible and we return false. If not then we say true. 
+#Also we will run this dfs for all the values 0 to courses because graph can be disconnected. 
+#We will also create a set noCycle which will contain all the nodes we have found so far which
+# Do not have a cycle.
+# This is because if we find this node again in some other node's neighbour then we will not process it.
+# Because we already know that it does not have any cycles. 
+
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        graph = defaultdict(list)
+        for prereq in prerequisites:
+            graph[prereq[1]].append(prereq[0])
+        
+        visited = set()
+        noCycle = set()
+        def dfs(course):
+            if course in visited:
+                return False
+            if course in noCycle: #We know that this node does not have cycle, so we simply return True.
+                return True
+            visited.add(course)
+            for c in graph[course]:
+                if not dfs(c):
+                    return False
+            visited.remove(course)
+            noCycle.add(course)
+            return True
+        
+        
+        for course in range(numCourses):
+            if not dfs(course):
+                return False
+        return True
+        
+        
+        
