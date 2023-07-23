@@ -1,0 +1,39 @@
+# We will take each edge from left to right. When we take and edge we want to 
+# add it to the graph. Let's say edge = [x, y], if we want to add and edge
+# between x and y, first we can check if a path exists from x to y.
+# If yes, then this new edge is going to create a cycle. We can return this
+# edge as an answer because this will be the last edge that creates a cycle
+# hence will be the correct answer. 
+
+# Now we need to check if an edge exists between x and y. We send x, y 
+# and an empty set to pathExists function. Now, we will go through all the 
+# neighbours of x and if any of them is y then path exists. Now we pick 
+# each neighbour of x and take its neighbour and check if it is y, if yes, 
+# path exists and so on. We will use a visited set to take care of all the 
+# neighbours/nodes we have already encountered. 
+
+# TC - O(n^2), there are n edges and for each edge we have to traverse the 
+# graph to check if a path exists which is O(n)
+# SC - O(n), for set and recursion. 
+
+class Solution:
+    def pathExists(self, x, y, visited):
+        if x == y:
+            return True
+        visited.add(x)
+        for neighbour in self.graph[x]:
+            if neighbour not in visited:
+                if self.pathExists(neighbour, y, visited):
+                    return True
+        return False
+    
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        self.graph = defaultdict(list)
+        for edge in edges:
+            x, y = edge[0], edge[1]
+            if self.pathExists(x, y, set()):
+                return edge
+            self.graph[x].append(y)
+            self.graph[y].append(x)
+        
+        
