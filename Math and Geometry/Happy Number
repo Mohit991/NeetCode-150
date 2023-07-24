@@ -1,0 +1,43 @@
+# We can use a set to capture previous values. 
+class Solution:
+    def getDigitsSquareSum(self, n):
+        squareSum = 0
+        while n > 0:
+            squareSum += (n % 10) ** 2
+            n = n // 10
+        return squareSum
+                
+    def isHappy(self, n: int) -> bool:
+        alreadySeen = set()
+        while n != 1:
+            squareSum = self.getDigitsSquareSum(n)
+            n = squareSum
+            if n in alreadySeen:
+                return False
+            alreadySeen.add(n)
+        return True
+
+            
+# We can also use other Floyd Cycle Detection algo to find the cycle.            
+class Solution:
+    def getDigitsSquareSum(self, n):
+        squareSum = 0
+        while n > 0:
+            squareSum += (n % 10) ** 2
+            n = n // 10
+        return squareSum
+    
+    def isHappy(self, n: int) -> bool:
+        slow, fast = n, n
+        while 1:
+            slow = self.getDigitsSquareSum(slow)
+            fast = self.getDigitsSquareSum(fast)
+            fast = self.getDigitsSquareSum(fast)
+            if slow == fast:
+                break
+            
+        if slow == 1:
+            return True
+        else:
+            return False
+        
