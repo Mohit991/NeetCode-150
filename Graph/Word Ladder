@@ -1,0 +1,52 @@
+# Step 1: Build an adj list using function oneWordDifference. 
+# To do this we have to go through all the nodes for each node making
+# it n^2, also we have to go through each word for these n^2 words.
+# since each word has length m, hence total complexity is O(n^2*m)
+# Step 2: Do a BFS and find the shortest path between the two nodes ie 
+# beginWord and endWord. The complexity for that is O(n)
+# Hence total complexity is O(n^2*m)
+
+class Solution:
+    def oneWordDifference(self, w1, w2):
+        oneWordDiff = False
+        for i in range(len(w1)):
+            if w1[i] != w2[i]:
+                if not oneWordDiff:
+                    oneWordDiff = True
+                else:
+                    return False
+        return True
+    
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        
+        words = defaultdict(list)
+        for word in wordList:
+            if self.oneWordDifference(beginWord, word):
+                words[beginWord].append(word)
+        
+        for i in range(len(wordList)):
+            for j in range(i+1, len(wordList)):
+                if self.oneWordDifference(wordList[i], wordList[j]):
+                    words[wordList[i]].append(wordList[j])
+                    words[wordList[j]].append(wordList[i])
+        
+        q = [beginWord]
+        visited = set()
+        count = 1
+        while q:
+            l = len(q)
+            for i in range(l):
+                word = q.pop(0)
+                if word in visited:
+                    continue
+                visited.add(word)
+                if word == endWord:
+                    return count
+                for w in words[word]:
+                    q.append(w)
+            count += 1
+        return 0
+    
+            
+    
+        
