@@ -1,0 +1,21 @@
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        row, col = len(matrix), len(matrix[0])
+        
+        #Step 1: Find the transpose of the matrix
+        for i in range(row):
+            for j in range(i, col):
+                temp = matrix[i][j]
+                matrix[i][j] = matrix[j][i]
+                matrix[j][i] = temp
+                
+        #Step 1: Swap cols 
+        for c in range(col//2):
+            for r in range(row):
+                temp = matrix[r][c]
+                matrix[r][c] = matrix[r][col-c-1] 
+                matrix[r][col-c-1] = temp
+                
+        
+                
+        
